@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   ArrowDownRight,
   ArrowLeft,
+  ArrowRight,
   ArrowUpRight,
   Asterisk,
   Brush,
@@ -31,6 +32,7 @@ const projects = [
     video: null,
     homeVideoBackdrop: false,
     tone: 'lime',
+    transitionColor: '#c0dbae',
     brief: '以年轻用户的睡眠焦虑与记录需求为切入点，探索工具体验与情绪陪伴之间的平衡。',
     approach: '围绕信息架构、睡眠数据呈现和角色陪伴机制建立完整体验，并以柔和绿色与“小眠鸮”IP串联界面。',
     deliverables: '用户研究 / 信息架构 / UI系统 / 高保真原型 / IP形象',
@@ -53,6 +55,7 @@ const projects = [
     image: '/assets/baiming-home.jpg',
     detailImage: '/assets/baiming-packaging.jpg',
     tone: 'magenta',
+    transitionColor: '#d26567',
     brief: '为“百茗”建立兼具传统茶文化联想与年轻传播感的品牌包装识别。',
     approach: '提取茶叶、山水与礼盒结构特征，以高饱和玫红和绿色形成撞色系统，并将标志、纹样与包装结构统一延展。',
     deliverables: '品牌标志 / 辅助图形 / 包装结构 / 礼盒设计 / 应用展示',
@@ -74,6 +77,7 @@ const projects = [
     image: '/assets/xiang-home.jpg',
     detailImage: '/assets/xiangjiaban/xiang-01.jpg',
     tone: 'burgundy',
+    transitionColor: '#44322a',
     brief: '从项家班皮影戏的历史、表演方式与造型语言出发，重新梳理非遗品牌的当代表达。',
     approach: '提炼皮影关节、幕布光影和传统纹样形成识别系统，在保留文化质感的同时建立清晰、现代的传播秩序。',
     deliverables: '品牌定位 / 标志系统 / 标准字 / 色彩规范 / 延展应用',
@@ -99,6 +103,7 @@ const projects = [
     tags: ['BOOK DESIGN', 'EDITORIAL', '2026'],
     image: '/assets/anzhu-home.jpg',
     tone: 'forest',
+    transitionColor: '#2e4221',
     brief: '围绕竹文化的自然意象与阅读节奏，构建克制、安静的书籍视觉。',
     approach: '运用竹节比例、竖向构图和纸张肌理形成版式语言，让封面与内页保持统一的东方气质。',
     deliverables: '概念设定 / 封面设计 / 内页版式 / 装帧系统',
@@ -119,6 +124,7 @@ const projects = [
     tags: ['IP DESIGN', 'ILLUSTRATION', '2025'],
     image: '/assets/juxiaopao-home.jpg',
     tone: 'orange',
+    transitionColor: '#e6c56a',
     brief: '从橘子汽水的清爽、活力与气泡感出发，塑造具有亲和力的原创角色。',
     approach: '以橙色、紫色和亮绿色建立高识别配色，并通过夸张动作与场景插画强化角色性格。',
     deliverables: '角色设定 / 主视觉插画 / 动作延展 / IP应用',
@@ -235,9 +241,10 @@ function DoodleStar({ className = '' }) {
   return <span className={`doodle-star ${className}`} aria-hidden="true">✦</span>
 }
 
-function PageWipe({ active }) {
+function PageWipe({ active, color }) {
+  const ink = ['#44322a', '#2e4221', '#226032'].includes(color) ? '#e5eed2' : '#2e4221'
   return (
-    <div className={`page-wipe ${active ? 'is-active' : ''}`} aria-hidden="true">
+    <div className={`page-wipe ${active ? 'is-active' : ''}`} style={{ '--wipe-color': color, '--wipe-ink': ink }} aria-hidden="true">
       <span>ZHU YI FEI / PORTFOLIO</span>
     </div>
   )
@@ -386,7 +393,7 @@ function CaseRail({ items, label }) {
         <span>{String(activeIndex + 1).padStart(2, '0')} — {String(items.length).padStart(2, '0')}</span>
         <div>
           <button type="button" onClick={() => move(-1)} aria-label="上一页"><ArrowLeft size={18} /></button>
-          <button type="button" onClick={() => move(1)} aria-label="下一页"><ArrowUpRight size={18} /></button>
+          <button type="button" onClick={() => move(1)} aria-label="下一页"><ArrowRight size={18} /></button>
         </div>
       </div>
     </div>
@@ -413,7 +420,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
           <h1 id="sleepy-title">小眠鸮<br /><em>APP UI设计</em></h1>
           <p>从情绪洞察到高保真原型，构建一款兼顾睡眠记录与内容陪伴的健康应用。</p>
           <div className="sleepy-case__chips" aria-label="项目范围">
-            <span>用户研究</span><span>信息架构</span><span>IP 设计</span><span>高保真原型</span>
+            <span>用户研究</span><span>UI.UX</span><span>IP 设计</span><span>高保真原型</span>
           </div>
         </div>
         <figure className="sleepy-case__hero-media">
@@ -444,32 +451,45 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
           <span className="sleepy-section-no">02 / 图形 IP 与图标设计 · VISUAL SYSTEM</span>
           <p>从陪伴角色到导航图标，建立温柔而清晰的识别系统。</p>
         </div>
-        <div className="sleepy-system-grid">
-          <figure className="sleepy-ip-card">
-            <img src="/assets/sleepy-owl/frame-73.png" alt="小眠鸮IP角色形象" />
-            <figcaption><strong>小眠鸮</strong><span>情绪陪伴角色 / SLEEP COMPANION</span></figcaption>
+        <div className="sleepy-visual-stack">
+          <figure className="sleepy-ip-board">
+            <img src="/assets/sleepy-owl/ip-design-board.png" alt="小眠鸮IP角色基础、晚睡弹窗与加载动画图形设计" />
+            <figcaption><strong>小眠鸮 IP 设计</strong><span>角色基础 · 情绪状态 · 动态延展</span></figcaption>
           </figure>
-          <div className="sleepy-system-copy">
-            <span className="sleepy-subsection-label">03 / 色彩规范 · COLOR SYSTEM</span>
-            <div className="sleepy-color-row" aria-label="品牌色彩">
-              <span style={{ '--swatch': '#e5eed2' }}>#E5EED2</span>
-              <span style={{ '--swatch': '#74b68a' }}>#74B68A</span>
-              <span style={{ '--swatch': '#226032' }}>#226032</span>
-              <span style={{ '--swatch': '#e6c56a' }}>#E6C56A</span>
+
+          <div className="sleepy-visual-pair">
+            <figure className="sleepy-app-mark">
+              <span className="sleepy-subsection-label">APP 标志 · APP ICON</span>
+              <img src="/assets/sleepy-owl/app-icon.png" alt="小眠鸮APP标志" loading="lazy" />
+              <figcaption><strong>把陪伴角色浓缩为第一眼识别。</strong><span>以小眠鸮的眼睛和头部轮廓构成图标，在小尺寸下依然保持清晰与亲和。</span></figcaption>
+            </figure>
+            <figure className="sleepy-color-board">
+              <span className="sleepy-subsection-label">03 / 色彩规范 · COLOR SYSTEM</span>
+              <img src="/assets/sleepy-owl/color-system-board.png" alt="小眠鸮APP完整色彩规范与色值说明" loading="lazy" />
+            </figure>
+          </div>
+
+          <section className="sleepy-nav-design" aria-labelledby="sleepy-nav-title">
+            <div className="sleepy-nav-design__copy">
+              <span className="sleepy-subsection-label">图标设计 / 导航栏设计</span>
+              <div>
+                <h3 id="sleepy-nav-title">四个入口，一套清晰的状态语言。</h3>
+                <p>选中状态以品牌绿和浅绿圆形底强调当前位置；未选中状态统一使用低饱和灰紫线性图标，让导航保持轻盈。</p>
+              </div>
             </div>
-            <h3>让健康工具先有温度，<br />再谈效率。</h3>
-            <p>低饱和绿色降低视觉刺激，少量黄色承担提示与奖励；圆角卡片、线性图标和小眠鸮的表情变化，共同建立温柔但不幼稚的产品性格。</p>
-            <div className="sleepy-nav-states" aria-label="底部导航状态设计">
-              {['nav-1.png', 'nav-2.png', 'nav-3.png', 'nav-4.png'].map((src) => (
-                <img key={src} src={`/assets/sleepy-owl/${src}`} alt="小眠鸮底部导航状态" loading="lazy" />
+            <div className="sleepy-nav-states" aria-label="底部导航选中状态设计">
+              {['nav-1.png', 'nav-2.png', 'nav-3.png', 'nav-4.png'].map((src, index) => (
+                <figure key={src}>
+                  <img src={`/assets/sleepy-owl/${src}`} alt={`小眠鸮底部导航第${index + 1}个选中状态`} loading="lazy" />
+                  <figcaption>SELECTED / 0{index + 1}</figcaption>
+                </figure>
               ))}
             </div>
-            <div className="sleepy-support-assets" aria-label="小眠鸮辅助视觉资产">
-              <img src="/assets/sleepy-owl/app-icon.png" alt="小眠鸮应用图标" loading="lazy" />
-              <img src="/assets/sleepy-owl/frame-67.png" alt="小眠鸮IP辅助图形" loading="lazy" />
-              <img src="/assets/sleepy-owl/navigation.png" alt="小眠鸮完整底部导航设计" loading="lazy" />
-            </div>
-          </div>
+            <figure className="sleepy-nav-default">
+              <img src="/assets/sleepy-owl/navigation.png" alt="小眠鸮底部导航非选中状态设计" loading="lazy" />
+              <figcaption>DEFAULT / 未选中状态</figcaption>
+            </figure>
+          </section>
         </div>
       </section>
 
@@ -505,7 +525,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
 
       <section className="sleepy-case__prototype shell">
         <div className="sleepy-case__section-head">
-          <span className="sleepy-section-no">06 / 设计亮点 · DESIGN HIGHLIGHTS</span>
+          <span className="sleepy-section-no">06 / 动态展示 · DESIGN HIGHLIGHTS</span>
           <p>把数据反馈、情绪提醒与交互动效统一为轻柔的睡前节奏。</p>
         </div>
         <div className="sleepy-prototype-grid">
@@ -520,18 +540,18 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
             </div>
           </div>
           <div className="sleepy-video-frame">
-            <img src="/assets/sleepy-owl/mockup.jpg" alt="小眠鸮高保真界面样机组合展示" />
+            <div className="sleepy-phone-video">
+              <video
+                src="/assets/sleepy-owl/prototype-flow.mp4"
+                poster="/assets/sleepy-owl/mockup.jpg"
+                controls
+                playsInline
+                preload="metadata"
+                aria-label="小眠鸮APP高保真原型交互演示"
+              />
+            </div>
           </div>
         </div>
-      </section>
-
-      <section className="sleepy-case__boards shell">
-        <div className="sleepy-case__section-head">
-          <span className="sleepy-section-no">07 / 完整展板 · FINAL BOARDS</span>
-          <p>完整呈现从视觉系统、界面分区到高保真交互的设计全案。</p>
-        </div>
-        <figure><img src="/assets/sleepy-owl/board-showcase.jpg" alt="小眠鸮APP高保真原型展示版面" loading="lazy" /></figure>
-        <figure><img src="/assets/sleepy-owl/board-interaction.jpg" alt="小眠鸮APP高保真原型交互稿" loading="lazy" /></figure>
       </section>
 
       <a
@@ -654,27 +674,37 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
 function App() {
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const [activeProjectSlug, setActiveProjectSlug] = useState(getProjectSlug)
+  const [activeProjectSlug, setActiveProjectSlug] = useState(null)
   const [transitioning, setTransitioning] = useState(false)
+  const [transitionColor, setTransitionColor] = useState('#cfe35f')
   const [introActive, setIntroActive] = useState(true)
   const [copyNotice, setCopyNotice] = useState('')
+
+  const finishIntro = useCallback(() => {
+    const url = new URL(window.location.href)
+    url.searchParams.delete('project')
+    url.hash = ''
+    window.history.replaceState({}, '', url)
+    setActiveProjectSlug(null)
+    window.scrollTo({ top: 0, behavior: 'auto' })
+    setIntroActive(false)
+  }, [])
 
   useEffect(() => {
     if (!introActive) return undefined
 
-    const dismissIntro = () => setIntroActive(false)
-    const timer = window.setTimeout(dismissIntro, 1450)
-    window.addEventListener('wheel', dismissIntro, { passive: true, once: true })
-    window.addEventListener('pointerdown', dismissIntro, { passive: true, once: true })
-    window.addEventListener('touchstart', dismissIntro, { passive: true, once: true })
+    const timer = window.setTimeout(finishIntro, 1450)
+    window.addEventListener('wheel', finishIntro, { passive: true, once: true })
+    window.addEventListener('pointerdown', finishIntro, { passive: true, once: true })
+    window.addEventListener('touchstart', finishIntro, { passive: true, once: true })
 
     return () => {
       window.clearTimeout(timer)
-      window.removeEventListener('wheel', dismissIntro)
-      window.removeEventListener('pointerdown', dismissIntro)
-      window.removeEventListener('touchstart', dismissIntro)
+      window.removeEventListener('wheel', finishIntro)
+      window.removeEventListener('pointerdown', finishIntro)
+      window.removeEventListener('touchstart', finishIntro)
     }
-  }, [introActive])
+  }, [finishIntro, introActive])
 
   useEffect(() => {
     const onScroll = () => {
@@ -717,6 +747,8 @@ function App() {
   const openProject = (event, slug) => {
     event.preventDefault()
     if (transitioning) return
+    const destination = featuredProjects.find((project) => project.slug === slug)
+    setTransitionColor(destination?.transitionColor ?? '#c0dbae')
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
@@ -732,6 +764,7 @@ function App() {
   const closeProject = (event, target = 'work') => {
     event.preventDefault()
     if (transitioning) return
+    setTransitionColor('#cfe35f')
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
@@ -739,7 +772,11 @@ function App() {
       url.hash = target
       window.history.pushState({}, '', url)
       setActiveProjectSlug(null)
-      window.setTimeout(() => document.querySelector(`#${target}`)?.scrollIntoView(), 0)
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          document.querySelector(`#${target}`)?.scrollIntoView({ block: 'start', behavior: 'auto' })
+        })
+      })
     }, 300)
     window.setTimeout(() => setTransitioning(false), 720)
   }
@@ -768,16 +805,16 @@ function App() {
       <>
         <ReadingProgress progress={scrollProgress} />
         <ProjectDetail project={activeProject} onBack={closeProject} onOpenProject={openProject} />
-        <PageWipe active={transitioning} />
+        <PageWipe active={transitioning} color={transitionColor} />
       </>
     )
   }
 
   return (
     <main>
-      <IntroSequence active={introActive} onSkip={() => setIntroActive(false)} />
+      <IntroSequence active={introActive} onSkip={finishIntro} />
       <ReadingProgress progress={scrollProgress} belowHeader scrolled={scrolled} />
-      <PageWipe active={transitioning} />
+      <PageWipe active={transitioning} color={transitionColor} />
       <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
         <a className="brand" href="#top" aria-label="返回首页">
           <span>ZYF/2026</span>
