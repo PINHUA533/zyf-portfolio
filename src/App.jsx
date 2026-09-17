@@ -195,6 +195,30 @@ const sleepyScreens = [
   { src: '/assets/sleepy-owl/profile.png', title: '个人中心', group: 'PROFILE' },
 ]
 
+const sleepyIpAssets = [
+  { src: 'ip-owl-01.png', label: '基础形象', style: 'is-primary' },
+  { src: 'ip-owl-02.png', label: '眉羽变化' },
+  { src: 'ip-owl-03.png', label: '圆润形态' },
+  { src: 'ip-owl-04.png', label: '展开状态' },
+  { src: 'ip-night-green.png', label: '晚睡提醒' },
+  { src: 'ip-night-purple.png', label: '夜间变体' },
+  { src: 'ip-owl-purple.png', label: '夜间配色' },
+  { src: 'ip-sleeping.png', label: '入睡状态', style: 'is-sleeping' },
+  { src: 'ip-late-reminder.png', label: '提醒弹窗', style: 'is-reminder' },
+]
+
+const sleepyPalette = [
+  { value: '#e5eed2', tone: 'light' },
+  { value: '#c0dbae', tone: 'light' },
+  { value: '#74b86a', tone: 'mid' },
+  { value: '#4f9146', tone: 'mid' },
+  { value: '#226032', tone: 'dark' },
+  { value: '#2e4221', tone: 'dark' },
+  { value: '#e6c56a', tone: 'warm' },
+  { value: '#d26567', tone: 'warm' },
+  { value: '#44322a', tone: 'dark' },
+]
+
 const strengths = [
   {
     icon: Palette,
@@ -452,44 +476,67 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
           <p>从陪伴角色到导航图标，建立温柔而清晰的识别系统。</p>
         </div>
         <div className="sleepy-visual-stack">
-          <figure className="sleepy-ip-board">
-            <img src="/assets/sleepy-owl/ip-design-board.png" alt="小眠鸮IP角色基础、晚睡弹窗与加载动画图形设计" />
-            <figcaption><strong>小眠鸮 IP 设计</strong><span>角色基础 · 情绪状态 · 动态延展</span></figcaption>
-          </figure>
+          <div className="sleepy-brand-row">
+            <section className="sleepy-ip-board" aria-labelledby="sleepy-ip-title">
+              <div className="sleepy-ip-board__head">
+                <span className="sleepy-subsection-label">IP 设计 · CHARACTER SYSTEM</span>
+                <div>
+                  <h3 id="sleepy-ip-title">一只小眠鸮，<br />多种睡前情绪。</h3>
+                  <p>将角色基础、晚睡提醒、夜间变体和入睡状态拆分排列，让形象系统更清晰。</p>
+                </div>
+              </div>
+              <div className="sleepy-ip-grid">
+                {sleepyIpAssets.map((item) => (
+                  <figure className={item.style ?? ''} key={item.src}>
+                    <img src={`/assets/sleepy-owl/${item.src}`} alt={`小眠鸮${item.label}设计`} loading="lazy" />
+                    <figcaption>{item.label}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </section>
 
-          <div className="sleepy-visual-pair">
             <figure className="sleepy-app-mark">
               <span className="sleepy-subsection-label">APP 标志 · APP ICON</span>
               <img src="/assets/sleepy-owl/app-icon.png" alt="小眠鸮APP标志" loading="lazy" />
-              <figcaption><strong>把陪伴角色浓缩为第一眼识别。</strong><span>以小眠鸮的眼睛和头部轮廓构成图标，在小尺寸下依然保持清晰与亲和。</span></figcaption>
-            </figure>
-            <figure className="sleepy-color-board">
-              <span className="sleepy-subsection-label">03 / 色彩规范 · COLOR SYSTEM</span>
-              <img src="/assets/sleepy-owl/color-system-board.png" alt="小眠鸮APP完整色彩规范与色值说明" loading="lazy" />
+              <figcaption><strong>第一眼识别</strong><span>提取小眠鸮的大眼睛与头部轮廓，在小尺寸中保持清晰和亲和。</span></figcaption>
             </figure>
           </div>
 
-          <section className="sleepy-nav-design" aria-labelledby="sleepy-nav-title">
-            <div className="sleepy-nav-design__copy">
-              <span className="sleepy-subsection-label">图标设计 / 导航栏设计</span>
-              <div>
-                <h3 id="sleepy-nav-title">四个入口，一套清晰的状态语言。</h3>
-                <p>选中状态以品牌绿和浅绿圆形底强调当前位置；未选中状态统一使用低饱和灰紫线性图标，让导航保持轻盈。</p>
+          <div className="sleepy-system-row">
+            <section className="sleepy-color-system" aria-labelledby="sleepy-color-title">
+              <div className="sleepy-color-system__head">
+                <span className="sleepy-subsection-label">03 / 色彩规范 · COLOR SYSTEM</span>
+                <h3 id="sleepy-color-title">色彩规范</h3>
               </div>
-            </div>
-            <div className="sleepy-nav-states" aria-label="底部导航选中状态设计">
-              {['nav-1.png', 'nav-2.png', 'nav-3.png', 'nav-4.png'].map((src, index) => (
-                <figure key={src}>
-                  <img src={`/assets/sleepy-owl/${src}`} alt={`小眠鸮底部导航第${index + 1}个选中状态`} loading="lazy" />
-                  <figcaption>SELECTED / 0{index + 1}</figcaption>
+              <div className="sleepy-palette" aria-label="小眠鸮品牌色值">
+                {sleepyPalette.map((color) => (
+                  <div className={`sleepy-swatch is-${color.tone}`} key={color.value}>
+                    <span style={{ '--swatch': color.value }} />
+                    <strong>{color.value}</strong>
+                  </div>
+                ))}
+              </div>
+              <p className="sleepy-color-note">以自然清新的绿色系为核心，从浅绿到深绿建立功能层级；暖黄色、豆沙红与棕色负责提示、奖励和质感点缀，在清爽舒适中保留温度。</p>
+            </section>
+
+            <section className="sleepy-nav-design" aria-labelledby="sleepy-nav-title">
+              <span className="sleepy-subsection-label">图标 / 导航栏设计</span>
+              <h3 id="sleepy-nav-title">选中与默认，<br />一列看清。</h3>
+              <p>品牌绿强调当前位置，灰紫线性图标保持轻盈。</p>
+              <div className="sleepy-nav-column" aria-label="底部导航状态设计">
+                {['nav-1.png', 'nav-2.png', 'nav-3.png', 'nav-4.png'].map((src, index) => (
+                  <figure key={src}>
+                    <img src={`/assets/sleepy-owl/${src}`} alt={`底部导航第${index + 1}个选中状态`} loading="lazy" />
+                    <figcaption>SELECTED / 0{index + 1}</figcaption>
+                  </figure>
+                ))}
+                <figure>
+                  <img src="/assets/sleepy-owl/navigation.png" alt="底部导航默认状态" loading="lazy" />
+                  <figcaption>DEFAULT / 未选中</figcaption>
                 </figure>
-              ))}
-            </div>
-            <figure className="sleepy-nav-default">
-              <img src="/assets/sleepy-owl/navigation.png" alt="小眠鸮底部导航非选中状态设计" loading="lazy" />
-              <figcaption>DEFAULT / 未选中状态</figcaption>
-            </figure>
-          </section>
+              </div>
+            </section>
+          </div>
         </div>
       </section>
 
@@ -543,7 +590,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
             <div className="sleepy-phone-video">
               <video
                 src="/assets/sleepy-owl/prototype-flow.mp4"
-                poster="/assets/sleepy-owl/mockup.jpg"
+                poster="/assets/sleepy-owl/loading.png"
                 controls
                 playsInline
                 preload="metadata"
