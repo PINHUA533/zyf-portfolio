@@ -60,6 +60,7 @@ const projects = [
     approach: '提取茶叶、山水与礼盒结构特征，以高饱和玫红和绿色形成撞色系统，并将标志、纹样与包装结构统一延展。',
     deliverables: '品牌标志 / 辅助图形 / 包装结构 / 礼盒设计 / 应用展示',
     gallery: [
+      { src: '/assets/baiming-showcase-board.jpg', alt: '百茗品牌包装设计全案展板', board: true },
       { src: '/assets/baiming-packaging.jpg', alt: '百茗品牌包装设计完整展板' },
     ],
   },
@@ -82,6 +83,7 @@ const projects = [
     approach: '提炼皮影关节、幕布光影和传统纹样形成识别系统，在保留文化质感的同时建立清晰、现代的传播秩序。',
     deliverables: '品牌定位 / 标志系统 / 标准字 / 色彩规范 / 延展应用',
     gallery: [
+      { src: '/assets/xiang-vis-board.jpg', alt: '项家班品牌视觉识别系统完整展板', board: true },
       { src: '/assets/xiangjiaban/xiang-01.jpg', alt: '项家班品牌视觉封面' },
       { src: '/assets/xiangjiaban/xiang-02.jpg', alt: '项家班品牌设计页面一' },
       { src: '/assets/xiangjiaban/xiang-03.jpg', alt: '项家班品牌设计页面二' },
@@ -108,6 +110,7 @@ const projects = [
     approach: '运用竹节比例、竖向构图和纸张肌理形成版式语言，让封面与内页保持统一的东方气质。',
     deliverables: '概念设定 / 封面设计 / 内页版式 / 装帧系统',
     gallery: [
+      { src: '/assets/anzhu-book-board.jpg', alt: '安竹纪书籍设计内页完整展板', board: true },
       { src: '/assets/anzhu-home.jpg', alt: '安竹纪书籍设计首页展示' },
     ],
   },
@@ -129,6 +132,7 @@ const projects = [
     approach: '以橙色、紫色和亮绿色建立高识别配色，并通过夸张动作与场景插画强化角色性格。',
     deliverables: '角色设定 / 主视觉插画 / 动作延展 / IP应用',
     gallery: [
+      { src: '/assets/juxiaopao-showcase-board.jpg', alt: '橘小泡IP插画角色设定完整展板', board: true },
       { src: '/assets/juxiaopao-home.jpg', alt: '橘小泡IP插画设计首页展示' },
     ],
   },
@@ -693,7 +697,7 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
           {project.gallery.map((image, index) => (
             <figure
               key={image.src}
-              className={index === 0 ? 'is-featured' : ''}
+              className={`${index === 0 ? 'is-featured ' : ''}${image.board ? 'is-board' : ''}`.trim()}
               data-reveal="media"
             >
               <img src={image.src} alt={image.alt} loading={index > 1 ? 'lazy' : 'eager'} />
@@ -723,7 +727,7 @@ function App() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeProjectSlug, setActiveProjectSlug] = useState(null)
   const [transitioning, setTransitioning] = useState(false)
-  const [transitionColor, setTransitionColor] = useState('#cfe35f')
+  const [transitionColor, setTransitionColor] = useState('#8be8cb')
   const [introActive, setIntroActive] = useState(true)
   const [copyNotice, setCopyNotice] = useState('')
 
@@ -811,7 +815,7 @@ function App() {
   const closeProject = (event, target = 'work') => {
     event.preventDefault()
     if (transitioning) return
-    setTransitionColor('#cfe35f')
+    setTransitionColor('#8be8cb')
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
@@ -910,7 +914,7 @@ function App() {
         <div className="about-layout">
           <div className="portrait-wrap" data-reveal>
             <div className="portrait-card">
-              <img className="portrait-main" src="/assets/portrait-provided-final.png" alt="视觉设计师朱一飞的绘本风人物形象" />
+              <img className="portrait-main" src="/assets/portrait-zhu-yifei.jpg" alt="视觉设计师朱一飞的个人照片" />
               <span className="portrait-note">HELLO, THIS IS<br />ZHU YIFEI :)</span>
             </div>
             <DoodleStar className="portrait-star" />
