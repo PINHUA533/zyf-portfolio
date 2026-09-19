@@ -1560,3 +1560,214 @@ body::before {
   .resume-view__hero h1 { font-size: 18vw; }
   .resume-view__sheet { width: calc(100% - 20px); padding-bottom: 80px; }
 }
+
+/* Nocturne portfolio v5 — hierarchy, stability and performance pass. */
+.scroll-opening__content { position: relative; }
+.scroll-opening__title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(92vw, 1440px);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  font-size: initial;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+.scroll-opening__title > strong {
+  margin-top: .08em;
+  display: flex;
+  justify-content: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(76px, 13.5vw, 238px);
+  font-weight: 600;
+  line-height: .74;
+  letter-spacing: -.085em;
+  white-space: nowrap;
+}
+.scroll-opening__title > strong b { font-weight: inherit; }
+.scroll-opening__title > strong i {
+  color: transparent;
+  font-style: normal;
+  font-weight: inherit;
+  -webkit-text-stroke: clamp(1.5px, .16vw, 3px) #68ffe4;
+  text-shadow: 0 0 30px rgba(104,255,228,.2);
+}
+.scroll-opening__title > .opening-meta {
+  position: static;
+  color: #f7fffd;
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(13px, 1.35vw, 22px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .42em;
+  transform: none;
+  white-space: nowrap;
+}
+.scroll-opening__title > .opening-meta.is-bottom {
+  margin-top: 1.25em;
+  color: #68ffe4;
+  font-size: clamp(10px, .9vw, 15px);
+  letter-spacing: .24em;
+}
+.scroll-opening__footer { margin-top: auto; }
+
+.work-directory button {
+  grid-template-columns: 34px minmax(138px, 1fr) minmax(90px, .72fr) 20px;
+  gap: 14px;
+}
+.work-directory__label { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.work-directory__label > strong {
+  color: rgba(245,248,247,.82);
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+.work-directory__label > small {
+  color: rgba(245,248,247,.42);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .08em;
+}
+.work-directory button > em {
+  overflow: hidden;
+  color: rgba(245,248,247,.38);
+  font-size: 9px;
+  font-style: normal;
+  letter-spacing: .12em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.work-directory button.is-active .work-directory__label > strong,
+.work-directory button.is-active .work-directory__label > small,
+.work-directory button.is-active > em { color: #68ffe4; }
+
+.strength-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+.strength-card {
+  min-height: 410px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+}
+.strength-card h3 { margin: 92px 0 16px; font-size: clamp(27px, 2.35vw, 42px); }
+.strength-card > p { margin: 0 0 32px; }
+.strength-meta { margin-top: auto; }
+
+.copy-toast {
+  color: #68ffe4;
+  border: 1px solid #68ffe4;
+  background: rgba(5,6,10,.94);
+  box-shadow: 0 18px 50px rgba(0,0,0,.34), 0 0 24px rgba(104,255,228,.18), inset 0 0 0 1px rgba(128,107,255,.18);
+}
+
+/* The Sleepy Owl case keeps its artwork palette but now uses the same dark
+   editorial surfaces as the rest of the project archive. */
+.project-detail.sleepy-case {
+  --sleepy-dark: #07110a;
+  --sleepy-forest: #8ed879;
+  --sleepy-green: #65b866;
+  --sleepy-mint: #b8dfa9;
+  --sleepy-cream: #eef7e9;
+  --sleepy-leaf: #68d885;
+  --sleepy-yellow: #e6c56a;
+  color: #f4faef;
+  background:
+    radial-gradient(circle at 82% 8%, rgba(116,184,106,.16), transparent 28%),
+    #06150b;
+}
+.sleepy-case .detail-header { color: #f4faef; border-color: rgba(142,216,121,.24); }
+.sleepy-case .detail-back:hover,
+.sleepy-case__hero-copy .detail-overline,
+.sleepy-kicker { color: var(--sleepy-leaf); }
+.sleepy-case__hero-copy .detail-overline,
+.sleepy-case__section-head { border-color: rgba(142,216,121,.24); }
+.sleepy-case__hero h1 { color: #f4faef; }
+.sleepy-case__hero h1 em { color: var(--sleepy-mint); }
+.sleepy-case__hero-copy > p,
+.sleepy-case__section-head > p,
+.sleepy-case__journey .sleepy-case__journey-intro p { color: rgba(238,247,233,.62); }
+.sleepy-case__chips span { color: #dff4d7; border-color: rgba(142,216,121,.3); background: rgba(142,216,121,.08); }
+.sleepy-case__hero-media { border: 1px solid rgba(142,216,121,.3); border-radius: 0; background: #0c2413; box-shadow: 0 32px 90px rgba(0,0,0,.48); }
+.sleepy-case__hero-media figcaption { color: #f4faef; background: #0c2413; }
+.sleepy-case__statement { background: transparent; }
+.sleepy-case__statement-grid {
+  color: #f4faef;
+  border: 1px solid rgba(142,216,121,.18);
+  border-radius: 0;
+  background: #0c2413;
+  box-shadow: 0 28px 90px rgba(0,0,0,.32);
+}
+.sleepy-case__statement h2,
+.sleepy-case__statement-copy > p { color: #f4faef; }
+.sleepy-principles,
+.sleepy-principles article { border-color: rgba(142,216,121,.2); }
+.sleepy-principles span { color: var(--sleepy-mint); }
+.sleepy-section-no,
+.sleepy-subsection-label { color: #06150b; border-radius: 0; background: var(--sleepy-mint); }
+.sleepy-case__section-head,
+.sleepy-case__section-head.is-light { color: #f4faef; }
+.sleepy-ip-board,
+.sleepy-app-mark,
+.sleepy-color-system,
+.sleepy-nav-design,
+.sleepy-prototype-copy { color: #f4faef; border: 1px solid rgba(142,216,121,.18); border-radius: 0; background: #0c2413; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+.sleepy-ip-board h3,
+.sleepy-app-mark figcaption strong,
+.sleepy-color-system h3,
+.sleepy-nav-design h3,
+.sleepy-prototype-copy h2 { color: #f4faef; }
+.sleepy-ip-board p,
+.sleepy-app-mark figcaption span,
+.sleepy-nav-design > p,
+.sleepy-prototype-copy p,
+.sleepy-highlight-list span { color: rgba(238,247,233,.62); }
+.sleepy-color-note,
+.sleepy-nav-column figure { color: #dff4d7; border-color: rgba(142,216,121,.24); border-radius: 0; background: rgba(142,216,121,.08); }
+.sleepy-case__architecture,
+.sleepy-case__journey { color: #f4faef; background: #081b0e; }
+.sleepy-architecture-grid,
+.sleepy-architecture-grid article,
+.sleepy-highlight-list,
+.sleepy-highlight-list article { border-color: rgba(142,216,121,.2); }
+.sleepy-architecture-grid article,
+.sleepy-architecture-grid article:nth-child(even) { background: #0c2413; }
+.sleepy-architecture-grid article > p,
+.case-rail__card figcaption,
+.case-rail__card figcaption strong { color: var(--sleepy-mint); }
+.case-rail__media { border-color: rgba(142,216,121,.45); background: #102b17; }
+.case-rail__controls { color: rgba(238,247,233,.62); border-color: rgba(142,216,121,.22); }
+.case-rail__controls button { color: #f4faef; border-color: rgba(142,216,121,.3); background: #0c2413; }
+.sleepy-case__prototype { color: #f4faef; }
+.sleepy-video-frame { border-color: rgba(142,216,121,.2); border-radius: 0; background: #0c2413; box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+.sleepy-case .detail-next { color: #06150b; background: var(--sleepy-mint); }
+
+.detail-overview,
+.detail-gallery,
+.sleepy-case__statement,
+.sleepy-case__system,
+.sleepy-case__architecture,
+.sleepy-case__journey,
+.sleepy-case__prototype { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+
+@media (max-width: 1100px) {
+  .strength-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .scroll-opening__title { width: 112vw; }
+  .scroll-opening__title > strong { font-size: clamp(66px, 19vw, 108px); }
+  .scroll-opening__title > .opening-meta.is-top { font-size: 8px; }
+  .work-directory button { grid-template-columns: 30px 1fr 18px; }
+  .work-directory button > em { display: none; }
+  .strength-grid { grid-template-columns: 1fr; }
+  .strength-card { min-height: 330px; }
+  .strength-card h3 { margin-top: 72px; }
+}

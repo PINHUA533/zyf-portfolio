@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -17,8 +17,9 @@ import {
 import FallingText from './components/FallingText'
 import ScrollExpand from './components/ScrollExpand'
 import CardSwap, { Card } from './components/CardSwap'
-import ScrollMotion from './components/ScrollMotion'
-import GlowCursor from './components/GlowCursor'
+
+const ScrollMotion = lazy(() => import('./components/ScrollMotion'))
+const GlowCursor = lazy(() => import('./components/GlowCursor'))
 
 const projects = [
   {
@@ -293,20 +294,29 @@ function SoftwareLogo({ type }) {
   }
   if (type === 'BL') {
     return (
-      <svg viewBox="0 0 40 34" aria-hidden="true">
-        <path fill="none" stroke="#f5792a" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M3 17h17l-7-6m7 6-5 7m5-7 8-9" />
-        <ellipse cx="26" cy="19" rx="10" ry="8" fill="none" stroke="#f5792a" strokeWidth="4" />
-        <circle cx="26" cy="19" r="4" fill="#65a9d9" />
+      <svg viewBox="0 0 64 56" aria-hidden="true">
+        <path fill="#f5792a" d="M4.7 25.2a3.5 3.5 0 0 1 3.5-3.5h16.1L15 14.5a3.6 3.6 0 0 1 4.4-5.7l15.8 12.3 7.4-7.4a3.6 3.6 0 1 1 5.1 5.1l-6.2 6.1c4.2 2.7 6.9 7 6.9 11.9 0 8.5-8 15.3-18 15.3-8.9 0-16.4-5.4-17.8-12.7H7.9a3.5 3.5 0 1 1 0-7h6.4c.8-1.5 1.8-2.9 3.1-4H8.2a3.5 3.5 0 0 1-3.5-3.2Zm25.7 3.2c-5.7 0-10.3 3.7-10.3 8.4 0 4.6 4.6 8.4 10.3 8.4s10.3-3.8 10.3-8.4c0-4.7-4.6-8.4-10.3-8.4Z" />
+        <ellipse cx="30.4" cy="36.8" rx="7.1" ry="5.7" fill="#4aa4d8" />
       </svg>
     )
   }
   if (type === 'PRO') {
     return (
-      <svg viewBox="0 0 36 36" aria-hidden="true">
-        <rect width="36" height="36" rx="8" fill="#11141b" />
-        <path d="M6 26c7-15 14-18 24-17-7 3-13 8-16 19Z" fill="#ff5d89" />
-        <path d="M8 27c7-10 14-14 22-15-6 4-10 9-13 17Z" fill="#ffb84d" />
-        <path d="M11 28c5-7 10-10 17-12-4 4-7 8-9 14Z" fill="#68ffe4" />
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="procreate-feather" x1="9" y1="51" x2="53" y2="12" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#fff7a6" /><stop offset=".2" stopColor="#ffb348" />
+            <stop offset=".4" stopColor="#ff4f95" /><stop offset=".62" stopColor="#ae5ada" />
+            <stop offset=".82" stopColor="#4abbe7" /><stop offset="1" stopColor="#47348a" />
+          </linearGradient>
+          <linearGradient id="procreate-highlight" x1="14" y1="47" x2="50" y2="17" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#fffde4" /><stop offset=".48" stopColor="#f38acb" /><stop offset="1" stopColor="#7451c8" />
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="60" height="60" rx="14" fill="#151617" />
+        <path fill="url(#procreate-feather)" d="M10.1 53.8c3.3-17.7 13.7-30.6 38.5-43.6 1.9-1 4.1.5 3.6 2.6-4.7 19.7-17 31.2-38.9 43.9-2.2 1.3-3.7-.3-3.2-2.9Z" />
+        <path fill="url(#procreate-highlight)" d="M12 50.2c8.8-12.9 19.8-19.7 36.6-35-8 14.4-17.5 25.1-36.6 35Z" opacity=".88" />
+        <path fill="#fff" d="M10.1 53.8c2-8 7.3-16.4 15.8-23.8-6.2 8.9-10.7 18-12.6 26.7-2.2 1.3-3.7-.3-3.2-2.9Z" opacity=".76" />
       </svg>
     )
   }
@@ -336,11 +346,41 @@ function PageWipe({ active, color }) {
   )
 }
 
-function ReadingProgress({ progress, belowHeader = false, scrolled = false }) {
+function ReadingProgress({ belowHeader = false, scrolled = false }) {
+  const barRef = useRef(null)
+
+  useEffect(() => {
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight
+      const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0
+      if (barRef.current) barRef.current.style.transform = `scaleX(${progress})`
+    }
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    update()
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
   return (
     <div className={`reading-progress ${belowHeader ? 'below-header' : ''} ${scrolled ? 'is-scrolled' : ''}`} aria-hidden="true">
-      <span style={{ transform: `scaleX(${progress})` }} />
+      <span ref={barRef} />
     </div>
+  )
+}
+
+function AmbientEffects({ motion = false }) {
+  return (
+    <Suspense fallback={null}>
+      <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
+      {motion ? <ScrollMotion routeKey="home" /> : null}
+    </Suspense>
   )
 }
 
@@ -438,7 +478,7 @@ function CaseRail({ items, label }) {
             aria-current={index === activeIndex ? 'true' : undefined}
           >
             <div className="case-rail__media">
-              <img src={item.src} alt={`${item.title}界面展示`} loading={index < 3 ? 'eager' : 'lazy'} />
+              <img src={item.src} alt={`${item.title}界面展示`} loading="lazy" decoding="async" />
             </div>
             <figcaption>
               <span>{String(index + 1).padStart(2, '0')} / {item.group}</span>
@@ -482,7 +522,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
           </div>
         </div>
         <figure className="sleepy-case__hero-media">
-          <img src="/assets/sleepy-owl/mockup.jpg" alt="小眠鸮APP多界面手机样机展示" />
+          <img src="/assets/sleepy-owl/mockup.jpg" alt="小眠鸮APP多界面手机样机展示" decoding="async" fetchPriority="high" />
           <figcaption><span>Hi！我是小眠鸮</span><strong>愿你一夜好梦</strong></figcaption>
         </figure>
       </section>
@@ -522,7 +562,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
               <div className="sleepy-ip-grid">
                 {sleepyIpAssets.map((item) => (
                   <figure className={item.style ?? ''} key={item.src}>
-                    <img src={`/assets/sleepy-owl/${item.src}`} alt={`小眠鸮${item.label}设计`} loading="lazy" />
+                    <img src={`/assets/sleepy-owl/${item.src}`} alt={`小眠鸮${item.label}设计`} loading="lazy" decoding="async" />
                     <figcaption>{item.label}</figcaption>
                   </figure>
                 ))}
@@ -531,7 +571,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
 
             <figure className="sleepy-app-mark">
               <span className="sleepy-subsection-label">APP 标志 · APP ICON</span>
-              <img src="/assets/sleepy-owl/app-icon.png" alt="小眠鸮APP标志" loading="lazy" />
+              <img src="/assets/sleepy-owl/app-icon.png" alt="小眠鸮APP标志" loading="lazy" decoding="async" />
               <figcaption><strong>第一眼识别</strong><span>提取小眠鸮的大眼睛与头部轮廓，在小尺寸中保持清晰和亲和。</span></figcaption>
             </figure>
           </div>
@@ -560,12 +600,12 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
               <div className="sleepy-nav-column" aria-label="底部导航状态设计">
                 {['nav-1.png', 'nav-2.png', 'nav-3.png', 'nav-4.png'].map((src, index) => (
                   <figure key={src}>
-                    <img src={`/assets/sleepy-owl/${src}`} alt={`底部导航第${index + 1}个选中状态`} loading="lazy" />
+                    <img src={`/assets/sleepy-owl/${src}`} alt={`底部导航第${index + 1}个选中状态`} loading="lazy" decoding="async" />
                     <figcaption>SELECTED / 0{index + 1}</figcaption>
                   </figure>
                 ))}
                 <figure>
-                  <img src="/assets/sleepy-owl/navigation.png" alt="底部导航默认状态" loading="lazy" />
+                  <img src="/assets/sleepy-owl/navigation.png" alt="底部导航默认状态" loading="lazy" decoding="async" />
                   <figcaption>DEFAULT / 未选中</figcaption>
                 </figure>
               </div>
@@ -627,7 +667,7 @@ function SleepyOwlDetail({ project, nextProject, onBack, onOpenProject }) {
                 poster="/assets/sleepy-owl/loading.png"
                 controls
                 playsInline
-                preload="metadata"
+                preload="none"
                 aria-label="小眠鸮APP高保真原型交互演示"
               />
             </div>
@@ -666,11 +706,10 @@ function ResumeView({ onBack }) {
       <section className="resume-view__hero shell">
         <span>RÉSUMÉ / 个人简历</span>
         <h1>关于经历，<br /><em>一页看完。</em></h1>
-        <p>下方使用图片展示，手机和桌面浏览器都可以直接查看；如需打印或保存，可打开 PDF 版本。</p>
-        <a href="/assets/zhu-yifei-resume.pdf" target="_blank" rel="noreferrer">打开 PDF / OPEN PDF <ArrowUpRight size={17} /></a>
+        <p>下方使用高清图片展示，手机和桌面浏览器都可以直接查看。</p>
       </section>
       <figure className="resume-view__sheet shell">
-        <img src="/assets/zhu-yifei-resume.jpg" alt="朱一飞个人简历" />
+        <img src="/assets/zhu-yifei-resume.jpg" alt="朱一飞个人简历" loading="lazy" decoding="async" />
       </figure>
     </main>
   )
@@ -708,7 +747,7 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
         </div>
         {project.showHeroCover !== false && (
           <div className="detail-cover">
-            <img src={project.detailImage ?? project.image} alt={`${project.title}项目封面`} />
+            <img src={project.detailImage ?? project.image} alt={`${project.title}项目封面`} decoding="async" fetchPriority="high" />
             <span>{project.no}</span>
           </div>
         )}
@@ -756,7 +795,7 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
               className={`${index === 0 ? 'is-featured ' : ''}${image.board ? 'is-board' : ''}`.trim()}
               data-reveal="media"
             >
-              <img src={image.src} alt={image.alt} loading={index > 1 ? 'lazy' : 'eager'} />
+              <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
               <figcaption>
                 {String(index + (project.video ? 2 : 1)).padStart(2, '0')} / {project.en}
               </figcaption>
@@ -780,7 +819,6 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
 
 function App() {
   const [scrolled, setScrolled] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [activeProjectSlug, setActiveProjectSlug] = useState(getProjectSlug())
   const [resumeOpen, setResumeOpen] = useState(getResumeOpen())
   const [transitioning, setTransitioning] = useState(false)
@@ -792,14 +830,21 @@ function App() {
   const [workActivity, setWorkActivity] = useState(0)
 
   useEffect(() => {
+    let frame = 0
     const onScroll = () => {
-      setScrolled(window.scrollY > 40)
-      const scrollable = document.documentElement.scrollHeight - window.innerHeight
-      setScrollProgress(scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0)
+      if (frame) return
+      frame = window.requestAnimationFrame(() => {
+        frame = 0
+        const next = window.scrollY > 40
+        setScrolled((current) => current === next ? current : next)
+      })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', onScroll)
+    }
   }, [activeProjectSlug])
 
   useEffect(() => {
@@ -943,8 +988,8 @@ function App() {
   if (resumeOpen) {
     return (
       <>
-        <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
-        <ReadingProgress progress={scrollProgress} />
+        <AmbientEffects />
+        <ReadingProgress />
         <ResumeView onBack={closeResume} />
       </>
     )
@@ -953,8 +998,8 @@ function App() {
   if (activeProject) {
     return (
       <>
-        <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
-        <ReadingProgress progress={scrollProgress} />
+        <AmbientEffects />
+        <ReadingProgress />
         <ProjectDetail project={activeProject} onBack={closeProject} onOpenProject={openProject} />
         <PageWipe active={transitioning} color={transitionColor} />
       </>
@@ -963,9 +1008,8 @@ function App() {
 
   return (
     <main>
-      <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
-      <ScrollMotion routeKey="home" />
-      <ReadingProgress progress={scrollProgress} belowHeader scrolled={scrolled} />
+      <AmbientEffects motion />
+      <ReadingProgress belowHeader scrolled={scrolled} />
       <PageWipe active={transitioning} color={transitionColor} />
       <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
         <a className="brand" href="#top" aria-label="返回首页">
@@ -999,9 +1043,9 @@ function App() {
         >
           <div className="scroll-opening__content shell">
             <div className="scroll-opening__title">
-              <small className="is-top">ZHU YI FEI</small>
-              <span>PORT</span><em>FOLIO</em>
-              <small className="is-bottom">2026 · VISUAL DESIGN</small>
+              <span className="opening-meta is-top">ZHU YI FEI</span>
+              <strong><b>PORT</b><i>FOLIO</i></strong>
+              <span className="opening-meta is-bottom">2026 · VISUAL DESIGN</span>
             </div>
             <div className="scroll-opening__footer">
               <p>ZHU YI FEI</p>
@@ -1018,7 +1062,7 @@ function App() {
         <div className="about-layout">
           <div className="portrait-wrap" data-motion-card data-gsap>
             <div className="portrait-card">
-              <img className="portrait-main" src="/assets/portrait-zhu-yifei.jpg" alt="视觉设计师朱一飞的个人照片" data-motion-image />
+              <img className="portrait-main" src="/assets/portrait-zhu-yifei.jpg" alt="视觉设计师朱一飞的个人照片" loading="lazy" decoding="async" data-motion-image />
               <span className="portrait-note">HELLO, THIS IS ZHU YIFEI :)</span>
             </div>
             <DoodleStar className="portrait-star" />
@@ -1097,8 +1141,11 @@ function App() {
                     aria-current={index === activeWorkIndex ? 'true' : undefined}
                   >
                     <span>{project.no}</span>
-                    <small>{project.directoryCategory}</small>
-                    <strong>{project.homeTitle}</strong>
+                    <span className="work-directory__label">
+                      <strong>{project.directoryCategory}</strong>
+                      <small>{project.homeTitle}</small>
+                    </span>
+                    <em>{project.en}</em>
                     <ArrowRight size={17} />
                   </button>
                 ))}
@@ -1125,7 +1172,7 @@ function App() {
                       if (event.key === 'Enter' || event.key === ' ') handleWorkCardClick(index, event)
                     }}
                   >
-                    <img src={project.image} alt={`${project.title}项目展示`} data-motion-image />
+                    <img src={project.image} alt={`${project.title}项目展示`} loading="lazy" decoding="async" data-motion-image />
                     <div className="work-swap-card__veil" />
                     <span className="work-swap-card__index">PROJECT / {project.no}</span>
                     <ArrowUpRight className="work-swap-card__arrow" size={28} />

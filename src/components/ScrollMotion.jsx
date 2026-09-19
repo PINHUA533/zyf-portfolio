@@ -8,6 +8,8 @@ export default function ScrollMotion({ routeKey = 'home' }) {
   useLayoutEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reduceMotion) return undefined
+    const allowParallax = window.matchMedia('(min-width: 900px) and (pointer: fine)').matches
+    let refreshFrame = 0
 
     const context = gsap.context(() => {
       document.querySelectorAll('[data-motion-section]').forEach((section, sectionIndex) => {
@@ -36,12 +38,13 @@ export default function ScrollMotion({ routeKey = 'home' }) {
         }
         if (cards.length) {
           timeline.from(cards, {
-            y: 128,
-            scale: 0.94,
+            y: 68,
+            scale: 0.97,
             opacity: 0,
-            duration: 1.28,
-            stagger: 0.16,
+            duration: 1.12,
+            stagger: 0.13,
             ease: 'power4.out',
+            clearProps: 'transform,opacity',
           }, title.length ? '-=.58' : 0)
         }
         if (images.length) {
@@ -56,24 +59,30 @@ export default function ScrollMotion({ routeKey = 'home' }) {
             ease: 'power3.inOut',
           }, '-=.85')
 
-          images.forEach((image) => {
-            gsap.to(image, {
-              yPercent: -5,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: image,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 0.9,
-              },
+          if (allowParallax) {
+            images.forEach((image) => {
+              gsap.to(image, {
+                yPercent: -4,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: image,
+                  start: 'top bottom',
+                  end: 'bottom top',
+                  scrub: 1.1,
+                  invalidateOnRefresh: true,
+                },
+              })
             })
-          })
+          }
         }
       })
     })
 
-    ScrollTrigger.refresh()
-    return () => context.revert()
+    refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh())
+    return () => {
+      if (refreshFrame) window.cancelAnimationFrame(refreshFrame)
+      context.revert()
+    }
   }, [routeKey])
 
   return null

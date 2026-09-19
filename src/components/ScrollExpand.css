@@ -47,8 +47,18 @@
 }
 
 .scroll-expand__color-art .aurora-container,
+.scroll-expand__aurora-fallback,
 .scroll-expand__aurora-shade,
 .scroll-expand__scrim { border-radius: inherit; overflow: hidden; }
+
+.scroll-expand__aurora-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 28% 22%, rgba(104,255,228,.42), transparent 42%),
+    radial-gradient(circle at 72% 26%, rgba(255,134,223,.3), transparent 38%),
+    linear-gradient(135deg, #061418, #17122e 58%, #04050a);
+}
 
 .scroll-expand__aurora-shade {
   position: absolute;

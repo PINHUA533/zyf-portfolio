@@ -83,7 +83,7 @@ export default function Aurora({
       alpha: true,
       premultipliedAlpha: true,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 1.35),
+      dpr: Math.min(window.devicePixelRatio || 1, 1.2),
     })
     const gl = renderer.gl
     gl.clearColor(0, 0, 0, 0)
@@ -111,42 +111,64 @@ export default function Aurora({
 
     let frame = 0
     let visible = true
+    let pageVisible = !document.hidden
     let last = performance.now()
+    let lastPaint = 0
     let elapsed = 0
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     const resize = () => {
-      const width = Math.max(container.clientWidth, 1)
-      const height = Math.max(container.clientHeight, 1)
+      // Keep one stable drawing buffer while the opening frame grows. Resizing the
+      // WebGL buffer on every scroll frame caused visible flashes on some GPUs.
+      const width = Math.max(window.innerWidth, 1)
+      const height = Math.max(window.innerHeight, 1)
       renderer.setSize(width, height)
       program.uniforms.uResolution.value = [width, height]
     }
 
     const render = (now) => {
+      frame = 0
+      if (!visible || !pageVisible) return
+      if (!reduceMotion && now - lastPaint < 32) {
+        frame = requestAnimationFrame(render)
+        return
+      }
       const delta = Math.min(now - last, 40)
       last = now
-      if (visible) {
-        elapsed += reduceMotion ? 0 : delta
-        const current = propsRef.current
-        program.uniforms.uTime.value = elapsed * 0.001 * current.speed
-        program.uniforms.uAmplitude.value = current.amplitude
-        program.uniforms.uBlend.value = current.blend
-        program.uniforms.uColorStops.value = current.colorStops.map(toColor)
-        renderer.render({ scene: mesh })
-      }
-      frame = requestAnimationFrame(render)
+      lastPaint = now
+      elapsed += reduceMotion ? 0 : delta
+      const current = propsRef.current
+      program.uniforms.uTime.value = elapsed * 0.001 * current.speed
+      renderer.render({ scene: mesh })
+      if (!reduceMotion) frame = requestAnimationFrame(render)
     }
 
-    const resizeObserver = new ResizeObserver(resize)
-    const visibilityObserver = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting })
-    resizeObserver.observe(container)
+    const start = () => {
+      if (!frame && visible && pageVisible) {
+        last = performance.now()
+        frame = requestAnimationFrame(render)
+      }
+    }
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      if (visible) start()
+      else if (frame) { cancelAnimationFrame(frame); frame = 0 }
+    }, { rootMargin: '120px' })
+    const onVisibility = () => {
+      pageVisible = !document.hidden
+      if (pageVisible) start()
+      else if (frame) { cancelAnimationFrame(frame); frame = 0 }
+    }
+    window.addEventListener('resize', resize, { passive: true })
+    document.addEventListener('visibilitychange', onVisibility)
     visibilityObserver.observe(container)
     resize()
-    frame = requestAnimationFrame(render)
+    start()
 
     return () => {
-      cancelAnimationFrame(frame)
-      resizeObserver.disconnect()
+      if (frame) cancelAnimationFrame(frame)
+      window.removeEventListener('resize', resize)
+      document.removeEventListener('visibilitychange', onVisibility)
       visibilityObserver.disconnect()
       if (gl.canvas.parentNode === container) container.removeChild(gl.canvas)
       geometry.remove()
