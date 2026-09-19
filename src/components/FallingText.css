@@ -1,0 +1,87 @@
+.falling-text {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  background-color: #17221e;
+  background-image:
+    linear-gradient(rgba(247,247,242,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(247,247,242,.045) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,200,239,.72) 0 2px, transparent 2.5px);
+  background-size: 46px 46px, 46px 46px, 29px 29px;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.falling-text:active { cursor: grabbing; }
+
+.falling-text__status {
+  position: absolute;
+  z-index: 4;
+  inset: 18px 20px auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  color: rgba(247,247,242,.62);
+  font-size: 8px;
+  letter-spacing: .16em;
+  pointer-events: none;
+}
+
+.falling-text__words { position: absolute; inset: 0; }
+
+.falling-text__word {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 4px 6px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 9px;
+  color: #9ff8d7;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  user-select: none;
+  will-change: transform;
+  white-space: nowrap;
+}
+
+.falling-text__word strong {
+  font-size: clamp(34px, 4.3vw, 78px);
+  font-weight: 600;
+  letter-spacing: -.05em;
+  line-height: .88;
+  text-shadow: 0 0 22px rgba(159,248,215,.22);
+}
+
+.falling-text__word small { font-size: 10px; font-weight: 700; letter-spacing: .15em; }
+.falling-text__word--2 { color: #ffc8ef; }
+.falling-text__word--2 strong { font-size: clamp(26px, 3.2vw, 58px); font-weight: 800; text-shadow: 0 0 24px rgba(255,200,239,.24); }
+.falling-text__word--3 { color: #fffdf6; }
+.falling-text__word--3 strong { font-size: clamp(42px, 5.4vw, 94px); font-weight: 500; }
+.falling-text__word--4 { color: #b9b0ff; }
+.falling-text__word--4 strong { font-size: clamp(30px, 3.7vw, 68px); font-weight: 700; text-shadow: 2px 0 #ff9ddd, -2px 0 #9ff8d7; }
+
+.falling-text.is-static .falling-text__words {
+  padding: 78px 28px 28px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.falling-text.is-static .falling-text__word { position: static; transform: none !important; }
+
+@media (max-width: 720px) {
+  .falling-text { min-height: 500px; }
+  .falling-text__status { inset-inline: 14px; font-size: 7px; }
+  .falling-text__status span:last-child { text-align: right; }
+  .falling-text__word { padding: 10px 14px; }
+  .falling-text__word strong { font-size: clamp(28px, 9.5vw, 46px); }
+  .falling-text__word--2 strong { font-size: clamp(22px, 7.2vw, 36px); }
+  .falling-text__word--3 strong { font-size: clamp(34px, 11vw, 54px); }
+  .falling-text__word--4 strong { font-size: clamp(25px, 8.2vw, 40px); }
+  .falling-text__word small { font-size: 8px; }
+}

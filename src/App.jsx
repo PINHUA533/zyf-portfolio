@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowDownRight,
   ArrowLeft,
@@ -14,6 +14,8 @@ import {
   Phone,
   Sparkles,
 } from 'lucide-react'
+import FallingText from './components/FallingText'
+import ScrollExpand from './components/ScrollExpand'
 
 const projects = [
   {
@@ -278,27 +280,6 @@ function PageWipe({ active, color }) {
   )
 }
 
-/* Isolated opening sequence; remove <IntroSequence /> to disable it. */
-function IntroSequence({ active, onSkip }) {
-  return (
-    <div className={`intro-sequence ${active ? 'is-active' : ''}`} aria-hidden={!active}>
-      <div className="intro-panel intro-panel--top">
-        <span>ZYF / 2026</span>
-        <strong>VISUAL</strong>
-      </div>
-      <div className="intro-panel intro-panel--middle">
-        <strong>PORT<em>FOLIO</em></strong>
-        <span>UI · UX · BRAND · IP</span>
-      </div>
-      <div className="intro-panel intro-panel--bottom">
-        <span>SELECTED WORKS</span>
-        <strong>DESIGN</strong>
-      </div>
-      <button type="button" onClick={onSkip} tabIndex={active ? 0 : -1}>SKIP INTRO</button>
-    </div>
-  )
-}
-
 function ReadingProgress({ progress, belowHeader = false, scrolled = false }) {
   return (
     <div className={`reading-progress ${belowHeader ? 'below-header' : ''} ${scrolled ? 'is-scrolled' : ''}`} aria-hidden="true">
@@ -321,14 +302,7 @@ function PersonalityExperiment() {
             <h2 id="personality-title">MY<br /><em>VIBE</em></h2>
             <p>一些兴趣，一点性格，<br />拼成真实的我。</p>
           </div>
-          <div className="type-cloud" aria-label="兴趣与个性标签" data-reveal="copy">
-            {personalityWords.map((word) => (
-              <p className={`type-cloud__word ${word.style}`} key={word.zh}>
-                <strong>{word.zh}</strong>
-                <span>{word.en}</span>
-              </p>
-            ))}
-          </div>
+          <FallingText items={personalityWords} trigger="scroll" gravity={0.68} />
         </div>
       </div>
     </section>
@@ -727,35 +701,8 @@ function App() {
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeProjectSlug, setActiveProjectSlug] = useState(null)
   const [transitioning, setTransitioning] = useState(false)
-  const [transitionColor, setTransitionColor] = useState('#8be8cb')
-  const [introActive, setIntroActive] = useState(true)
+  const [transitionColor, setTransitionColor] = useState('#aef5dc')
   const [copyNotice, setCopyNotice] = useState('')
-
-  const finishIntro = useCallback(() => {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('project')
-    url.hash = ''
-    window.history.replaceState({}, '', url)
-    setActiveProjectSlug(null)
-    window.scrollTo({ top: 0, behavior: 'auto' })
-    setIntroActive(false)
-  }, [])
-
-  useEffect(() => {
-    if (!introActive) return undefined
-
-    const timer = window.setTimeout(finishIntro, 1450)
-    window.addEventListener('wheel', finishIntro, { passive: true, once: true })
-    window.addEventListener('pointerdown', finishIntro, { passive: true, once: true })
-    window.addEventListener('touchstart', finishIntro, { passive: true, once: true })
-
-    return () => {
-      window.clearTimeout(timer)
-      window.removeEventListener('wheel', finishIntro)
-      window.removeEventListener('pointerdown', finishIntro)
-      window.removeEventListener('touchstart', finishIntro)
-    }
-  }, [finishIntro, introActive])
 
   useEffect(() => {
     const onScroll = () => {
@@ -815,7 +762,7 @@ function App() {
   const closeProject = (event, target = 'work') => {
     event.preventDefault()
     if (transitioning) return
-    setTransitionColor('#8be8cb')
+    setTransitionColor('#aef5dc')
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
@@ -863,7 +810,6 @@ function App() {
 
   return (
     <main>
-      <IntroSequence active={introActive} onSkip={finishIntro} />
       <ReadingProgress progress={scrollProgress} belowHeader scrolled={scrolled} />
       <PageWipe active={transitioning} color={transitionColor} />
       <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
@@ -880,31 +826,37 @@ function App() {
         </a>
       </header>
 
-      <section className="hero" id="top">
-        <div className="hero-art" aria-hidden="true">
-          <span className="hero-glow" />
-          <span className="hero-orbit" />
-          <span className="hero-orbit-star">✦</span>
-        </div>
-        <div className="hero-content shell">
-          <div className="hero-meta">
-            <span>VISUAL DESIGN</span>
-            <span>PORTFOLIO / 2026</span>
-          </div>
-          <div className="hero-title">
-            <span className="hero-title-prefix">UI · UX · BRAND · IP</span>
-            <h1 aria-label="Portfolio">
+      <section className="scroll-opening" id="top" aria-label="滚动开场">
+        <ScrollExpand
+          mediaType="color"
+          alt="灰绿色复古波点与字体构成的梦核开场画面"
+          title="ZYF / 2026"
+          scrollHint="向下滚动 · SCROLL TO OPEN"
+          startWidth={34}
+          startHeight={56}
+          startRadius={180}
+          endRadius={0}
+          mediaZoom={1.1}
+          scrollDistance={1.12}
+          holdDistance={0.22}
+          smoothing={0.085}
+          overlayScrim={0.1}
+        >
+          <div className="scroll-opening__content shell">
+            <div className="scroll-opening__meta">
+              <span>VISUAL DESIGN / 2026</span>
+              <span>UI · UX · BRAND · IP</span>
+            </div>
+            <div className="scroll-opening__title">
               <span>PORT</span><em>FOLIO</em>
-            </h1>
-            <span className="hero-title-note">VISUAL<br />COMMUNICATION</span>
+              <small>DREAM / SYSTEM / STORY</small>
+            </div>
+            <div className="scroll-opening__footer">
+              <p>ZHU YI FEI</p>
+              <a href="#work">VIEW SELECTED WORKS <ArrowDownRight size={20} strokeWidth={1.5} /></a>
+            </div>
           </div>
-          <div className="hero-footer">
-            <p className="hero-name">ZHU YI FEI</p>
-            <a className="hero-work-link" href="#work">
-              VIEW SELECTED WORKS <ArrowDownRight size={20} strokeWidth={1.5} />
-            </a>
-          </div>
-        </div>
+        </ScrollExpand>
       </section>
 
       <section className="about section shell" id="about">
@@ -943,6 +895,9 @@ function App() {
             <div className="about-contact-mini">
               <a href="tel:13868142319"><span>PHONE</span>138 6814 2319</a>
               <a href="mailto:1131440698@qq.com"><span>EMAIL</span>1131440698@qq.com</a>
+              <a className="resume-link" href="/assets/zhu-yifei-resume.pdf" target="_blank" rel="noreferrer">
+                <span>查看简历 / VIEW RÉSUMÉ</span><ArrowUpRight size={14} />
+              </a>
             </div>
           </div>
         </div>
@@ -979,6 +934,9 @@ function App() {
                     className={`project-visual ${project.homeVideoBackdrop ? 'has-video-backdrop' : ''}`}
                     data-reveal="media"
                   >
+                    <div className="retro-window-bar" aria-hidden="true">
+                      <span>PROJECT_{project.no}.HTML</span><span>— □ ×</span>
+                    </div>
                     {project.homeVideoBackdrop && (
                       <video
                         className="project-video-backdrop"
