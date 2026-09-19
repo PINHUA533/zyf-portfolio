@@ -18,7 +18,7 @@ import FallingText from './components/FallingText'
 import ScrollExpand from './components/ScrollExpand'
 import CardSwap, { Card } from './components/CardSwap'
 import ScrollMotion from './components/ScrollMotion'
-import SplashCursor from './components/SplashCursor'
+import GlowCursor from './components/GlowCursor'
 
 const projects = [
   {
@@ -29,6 +29,7 @@ const projects = [
     en: 'SLEEPY OWL',
     category: 'UI / UX DESIGN',
     categoryZh: '界面与体验',
+    directoryCategory: 'UI 设计',
     year: '2026',
     desc: '从情绪洞察到高保真原型，构建一款兼顾睡眠记录与内容陪伴的健康应用。',
     tags: ['UI / UX', 'IP DESIGN', '2026'],
@@ -54,6 +55,7 @@ const projects = [
     en: 'BAIMING PACKAGING',
     category: 'PACKAGING DESIGN',
     categoryZh: '品牌包装',
+    directoryCategory: '包装设计',
     year: '2026',
     desc: '围绕“百茗”完成品牌标志、辅助图形与礼盒包装系统，以玫红与绿色构建年轻醒目的茶礼视觉。',
     tags: ['PACKAGING', 'BRAND IDENTITY', '2026'],
@@ -66,8 +68,8 @@ const projects = [
     deliverables: '品牌标志 / 辅助图形 / 包装结构 / 礼盒设计 / 应用展示',
     gallery: [
       { src: '/assets/baiming-showcase-board.jpg', alt: '百茗品牌包装设计全案展板', board: true },
-      { src: '/assets/baiming-packaging.jpg', alt: '百茗品牌包装设计完整展板' },
     ],
+    showHeroCover: false,
   },
   {
     slug: 'xiang-troupe',
@@ -77,6 +79,7 @@ const projects = [
     en: 'XIANG TROUPE',
     category: 'BRAND IDENTITY',
     categoryZh: '品牌视觉',
+    directoryCategory: '品牌视觉',
     year: '2026',
     desc: '以太湖安吉非遗项家皮影戏为文化母题，完成品牌定位、标志系统与传统光影语言的当代转译。',
     tags: ['BRAND IDENTITY', 'VI SYSTEM', '2026'],
@@ -96,6 +99,7 @@ const projects = [
       { src: '/assets/xiangjiaban/xiang-07.jpg', alt: '项家班品牌设计页面六' },
       { src: '/assets/xiangjiaban/xiang-08.jpg', alt: '项家班品牌设计页面七' },
     ],
+    showHeroCover: false,
   },
   {
     slug: 'anzhu-book',
@@ -105,6 +109,7 @@ const projects = [
     en: 'ANZHU CHRONICLE',
     category: 'BOOK DESIGN',
     categoryZh: '书籍装帧',
+    directoryCategory: '书籍设计',
     year: '2026',
     desc: '以竹文化为主题的书籍装帧与阅读视觉设计。',
     tags: ['BOOK DESIGN', 'EDITORIAL', '2026'],
@@ -116,8 +121,10 @@ const projects = [
     deliverables: '概念设定 / 封面设计 / 内页版式 / 装帧系统',
     gallery: [
       { src: '/assets/anzhu-book-board.jpg', alt: '安竹纪书籍设计内页完整展板', board: true },
-      { src: '/assets/anzhu-home.jpg', alt: '安竹纪书籍设计首页展示' },
+      { src: '/assets/anzhu-a3-board-01.jpg', alt: '安竹纪书籍设计说明与页面效果展板', board: true },
+      { src: '/assets/anzhu-a3-board-02.jpg', alt: '安竹纪书籍实物拍摄与装帧细节展板', board: true },
     ],
+    showHeroCover: false,
   },
   {
     slug: 'ju-xiaopao',
@@ -127,6 +134,7 @@ const projects = [
     en: 'JU XIAOPAO',
     category: 'IP ILLUSTRATION',
     categoryZh: 'IP插画',
+    directoryCategory: 'IP 插画',
     year: '2025',
     desc: '以橘子汽水为灵感展开的角色设定与商业插画。',
     tags: ['IP DESIGN', 'ILLUSTRATION', '2025'],
@@ -140,6 +148,7 @@ const projects = [
       { src: '/assets/juxiaopao-showcase-board.jpg', alt: '橘小泡IP插画角色设定完整展板', board: true },
       { src: '/assets/juxiaopao-home.jpg', alt: '橘小泡IP插画设计首页展示' },
     ],
+    showHeroCover: false,
   },
 ]
 
@@ -269,6 +278,50 @@ const designTools = [
   { short: 'BL', name: 'Blender', use: '3D 建模渲染' },
   { short: 'PRO', name: 'Procreate', use: '数字插画' },
 ]
+
+function SoftwareLogo({ type }) {
+  if (type === 'FIG') {
+    return (
+      <svg viewBox="0 0 34 34" aria-hidden="true">
+        <path fill="#f24e1e" d="M8 2h9v10H8a5 5 0 0 1 0-10Z" />
+        <path fill="#a259ff" d="M17 2h4a5 5 0 0 1 0 10h-4Z" />
+        <path fill="#1abcfe" d="M17 12h4a5 5 0 1 1-4 5Z" />
+        <path fill="#0acf83" d="M8 12h9v10H8a5 5 0 0 1 0-10Z" />
+        <path fill="#ff7262" d="M8 22h9v5a5 5 0 1 1-9-3Z" />
+      </svg>
+    )
+  }
+  if (type === 'BL') {
+    return (
+      <svg viewBox="0 0 40 34" aria-hidden="true">
+        <path fill="none" stroke="#f5792a" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M3 17h17l-7-6m7 6-5 7m5-7 8-9" />
+        <ellipse cx="26" cy="19" rx="10" ry="8" fill="none" stroke="#f5792a" strokeWidth="4" />
+        <circle cx="26" cy="19" r="4" fill="#65a9d9" />
+      </svg>
+    )
+  }
+  if (type === 'PRO') {
+    return (
+      <svg viewBox="0 0 36 36" aria-hidden="true">
+        <rect width="36" height="36" rx="8" fill="#11141b" />
+        <path d="M6 26c7-15 14-18 24-17-7 3-13 8-16 19Z" fill="#ff5d89" />
+        <path d="M8 27c7-10 14-14 22-15-6 4-10 9-13 17Z" fill="#ffb84d" />
+        <path d="M11 28c5-7 10-10 17-12-4 4-7 8-9 14Z" fill="#68ffe4" />
+      </svg>
+    )
+  }
+
+  const adobeTone = {
+    PS: ['#001e36', '#31a8ff'], AI: ['#330000', '#ff9a00'], ID: ['#49021f', '#ff3366'],
+    AE: ['#00005b', '#9999ff'], PR: ['#00005b', '#9999ff'],
+  }[type] ?? ['#11141b', '#f5f8f7']
+  return (
+    <svg viewBox="0 0 36 36" aria-hidden="true">
+      <rect width="36" height="36" rx="7" fill={adobeTone[0]} />
+      <text x="18" y="23" fill={adobeTone[1]} fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" textAnchor="middle">{type}</text>
+    </svg>
+  )
+}
 
 function DoodleStar({ className = '' }) {
   return <span className={`doodle-star ${className}`} aria-hidden="true">✦</span>
@@ -599,6 +652,30 @@ function getProjectSlug() {
   return new URLSearchParams(window.location.search).get('project')
 }
 
+function getResumeOpen() {
+  return new URLSearchParams(window.location.search).get('resume') === '1'
+}
+
+function ResumeView({ onBack }) {
+  return (
+    <main className="resume-view">
+      <header className="detail-header shell">
+        <a href="#about" onClick={onBack} className="detail-back"><ArrowLeft size={18} /> 返回关于我</a>
+        <a href="#top" onClick={(event) => onBack(event, 'top')} className="detail-brand">ZHU YI FEI / 2026</a>
+      </header>
+      <section className="resume-view__hero shell">
+        <span>RÉSUMÉ / 个人简历</span>
+        <h1>关于经历，<br /><em>一页看完。</em></h1>
+        <p>下方使用图片展示，手机和桌面浏览器都可以直接查看；如需打印或保存，可打开 PDF 版本。</p>
+        <a href="/assets/zhu-yifei-resume.pdf" target="_blank" rel="noreferrer">打开 PDF / OPEN PDF <ArrowUpRight size={17} /></a>
+      </section>
+      <figure className="resume-view__sheet shell">
+        <img src="/assets/zhu-yifei-resume.jpg" alt="朱一飞个人简历" />
+      </figure>
+    </main>
+  )
+}
+
 function ProjectDetail({ project, onBack, onOpenProject }) {
   const projectIndex = featuredProjects.findIndex((item) => item.slug === project.slug)
   const nextProject = featuredProjects[(projectIndex + 1) % featuredProjects.length]
@@ -616,7 +693,7 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
         <a href="#top" onClick={(event) => onBack(event, 'top')} className="detail-brand">ZHU YI FEI / 2026</a>
       </header>
 
-      <section className="detail-hero shell">
+      <section className={`detail-hero shell ${project.showHeroCover === false ? 'is-text-only' : ''}`}>
         <div className="detail-heading">
           <div className="detail-overline">
             <span>PROJECT / {project.no}</span>
@@ -629,10 +706,12 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
             {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
         </div>
-        <div className="detail-cover">
-          <img src={project.detailImage ?? project.image} alt={`${project.title}项目封面`} />
-          <span>{project.no}</span>
-        </div>
+        {project.showHeroCover !== false && (
+          <div className="detail-cover">
+            <img src={project.detailImage ?? project.image} alt={`${project.title}项目封面`} />
+            <span>{project.no}</span>
+          </div>
+        )}
       </section>
 
       <section className="detail-overview shell">
@@ -703,9 +782,14 @@ function App() {
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [activeProjectSlug, setActiveProjectSlug] = useState(getProjectSlug())
+  const [resumeOpen, setResumeOpen] = useState(getResumeOpen())
   const [transitioning, setTransitioning] = useState(false)
   const [transitionColor, setTransitionColor] = useState('#68ffe4')
   const [copyNotice, setCopyNotice] = useState('')
+  const [activeWorkIndex, setActiveWorkIndex] = useState(0)
+  const [armedWorkIndex, setArmedWorkIndex] = useState(null)
+  const [workPaused, setWorkPaused] = useState(false)
+  const [workActivity, setWorkActivity] = useState(0)
 
   useEffect(() => {
     const onScroll = () => {
@@ -732,6 +816,7 @@ function App() {
   useEffect(() => {
     const onPopState = () => {
       setActiveProjectSlug(getProjectSlug())
+      setResumeOpen(getResumeOpen())
       window.scrollTo({ top: 0 })
     }
     window.addEventListener('popstate', onPopState)
@@ -740,10 +825,21 @@ function App() {
 
   useEffect(() => {
     const activeProject = featuredProjects.find((project) => project.slug === activeProjectSlug)
-    document.title = activeProject
+    document.title = resumeOpen
+      ? '个人简历｜朱一飞作品集'
+      : activeProject
       ? `${activeProject.title}｜朱一飞作品集`
       : '朱一飞｜视觉设计作品集'
-  }, [activeProjectSlug])
+  }, [activeProjectSlug, resumeOpen])
+
+  useEffect(() => {
+    if (activeProjectSlug || workPaused) return undefined
+    const timer = window.setInterval(() => {
+      setActiveWorkIndex((index) => (index + 1) % featuredProjects.length)
+      setArmedWorkIndex(null)
+    }, 5200)
+    return () => window.clearInterval(timer)
+  }, [activeProjectSlug, workPaused, workActivity])
 
   const openProject = (event, slug) => {
     event.preventDefault()
@@ -752,6 +848,7 @@ function App() {
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
+      url.searchParams.delete('resume')
       url.searchParams.set('project', slug)
       url.hash = ''
       window.history.pushState({}, '', url)
@@ -783,6 +880,49 @@ function App() {
 
   const activeProject = featuredProjects.find((project) => project.slug === activeProjectSlug)
 
+  const selectWork = (index) => {
+    setWorkActivity((value) => value + 1)
+    setActiveWorkIndex(index)
+    setArmedWorkIndex(null)
+  }
+
+  const openResume = (event) => {
+    event.preventDefault()
+    const url = new URL(window.location.href)
+    url.searchParams.delete('project')
+    url.searchParams.set('resume', '1')
+    url.hash = ''
+    window.history.pushState({}, '', url)
+    setActiveProjectSlug(null)
+    setResumeOpen(true)
+    window.scrollTo({ top: 0 })
+  }
+
+  const closeResume = (event, target = 'about') => {
+    event.preventDefault()
+    const url = new URL(window.location.href)
+    url.searchParams.delete('resume')
+    url.hash = target
+    window.history.pushState({}, '', url)
+    setResumeOpen(false)
+    window.requestAnimationFrame(() => document.querySelector(`#${target}`)?.scrollIntoView({ block: 'start' }))
+  }
+
+  const handleWorkCardClick = (index, event) => {
+    event.preventDefault()
+    setWorkActivity((value) => value + 1)
+    if (index !== activeWorkIndex) {
+      setActiveWorkIndex(index)
+      setArmedWorkIndex(index)
+      return
+    }
+    if (armedWorkIndex === index) {
+      openProject(event, featuredProjects[index].slug)
+      return
+    }
+    setArmedWorkIndex(index)
+  }
+
   const copyContact = async (value) => {
     try {
       await navigator.clipboard.writeText(value)
@@ -800,10 +940,20 @@ function App() {
     window.setTimeout(() => setCopyNotice(''), 2200)
   }
 
+  if (resumeOpen) {
+    return (
+      <>
+        <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
+        <ReadingProgress progress={scrollProgress} />
+        <ResumeView onBack={closeResume} />
+      </>
+    )
+  }
+
   if (activeProject) {
     return (
       <>
-        <SplashCursor COLOR="#68ffe4" SECONDARY_COLOR="#806bff" />
+        <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
         <ReadingProgress progress={scrollProgress} />
         <ProjectDetail project={activeProject} onBack={closeProject} onOpenProject={openProject} />
         <PageWipe active={transitioning} color={transitionColor} />
@@ -813,7 +963,7 @@ function App() {
 
   return (
     <main>
-      <SplashCursor COLOR="#68ffe4" SECONDARY_COLOR="#806bff" />
+      <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
       <ScrollMotion routeKey="home" />
       <ReadingProgress progress={scrollProgress} belowHeader scrolled={scrolled} />
       <PageWipe active={transitioning} color={transitionColor} />
@@ -834,22 +984,24 @@ function App() {
       <section className="scroll-opening" id="top" aria-label="滚动开场">
         <ScrollExpand
           mediaType="color"
-          alt="黑色、青色与蓝紫颗粒流动构成的梦核开场画面"
+          alt="青色、蓝紫与粉色极光流动构成的梦核开场画面"
           title="ZYF / 2026"
           scrollHint="向下滚动 · SCROLL TO OPEN"
-          startWidth={70}
-          startHeight={62}
-          startRadius={34}
+          startWidth={54}
+          startHeight={56}
+          startRadius={42}
           endRadius={0}
           mediaZoom={1.1}
-          scrollDistance={1.12}
-          holdDistance={0.22}
+          scrollDistance={1.55}
+          holdDistance={0.32}
           smoothing={0.085}
           overlayScrim={0.1}
         >
           <div className="scroll-opening__content shell">
             <div className="scroll-opening__title">
+              <small className="is-top">ZHU YI FEI</small>
               <span>PORT</span><em>FOLIO</em>
+              <small className="is-bottom">2026 · VISUAL DESIGN</small>
             </div>
             <div className="scroll-opening__footer">
               <p>ZHU YI FEI</p>
@@ -867,7 +1019,7 @@ function App() {
           <div className="portrait-wrap" data-motion-card data-gsap>
             <div className="portrait-card">
               <img className="portrait-main" src="/assets/portrait-zhu-yifei.jpg" alt="视觉设计师朱一飞的个人照片" data-motion-image />
-              <span className="portrait-note">HELLO, THIS IS<br />ZHU YIFEI :)</span>
+              <span className="portrait-note">HELLO, THIS IS ZHU YIFEI :)</span>
             </div>
             <DoodleStar className="portrait-star" />
             <h2 className="portrait-statement">
@@ -880,7 +1032,7 @@ function App() {
             <p className="eyebrow">2027 GRADUATE / VISUAL DESIGNER / IP CREATOR</p>
             <h2 className="about-title">
               <span className="about-hi">Hi<i aria-label="，" /></span>
-              <span className="about-name"><i>我是</i><strong>朱一飞</strong></span>
+              <span className="about-name"><i>我是</i><strong>朱 一 飞</strong></span>
             </h2>
             <p className="bio">
               关注品牌视觉、UI、包装与原创 IP，喜欢从真实感受中寻找灵感，再用清晰的系统和有温度的图形，
@@ -895,7 +1047,7 @@ function App() {
             <div className="about-contact-mini">
               <a href="tel:13868142319"><span>PHONE</span>138 6814 2319</a>
               <a href="mailto:1131440698@qq.com"><span>EMAIL</span>1131440698@qq.com</a>
-              <a className="resume-link" href="/assets/zhu-yifei-resume.pdf" target="_blank" rel="noreferrer">
+              <a className="resume-link" href="?resume=1" onClick={openResume}>
                 <span>查看简历 / VIEW RÉSUMÉ</span><ArrowUpRight size={14} />
               </a>
             </div>
@@ -921,25 +1073,56 @@ function App() {
             </h2>
             <p>05 PROJECTS<br />2025—2026</p>
           </div>
-          <div className="work-swap-layout">
+          <div
+            className="work-swap-layout"
+            onMouseEnter={() => setWorkPaused(true)}
+            onMouseLeave={() => setWorkPaused(false)}
+            onFocusCapture={() => setWorkPaused(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) setWorkPaused(false)
+            }}
+          >
             <div className="work-swap-copy" data-motion-card data-gsap>
-              <span>CLICK TO OPEN / 自动轮播</span>
-              <h3>五个项目，<br />一组流动的<br /><em>视觉档案。</em></h3>
-              <p>卡片会缓慢自动切换；悬停暂停，点击当前卡片进入完整项目。</p>
-              <div className="work-swap-counter">01 — 05 <ArrowUpRight size={18} /></div>
+              <span>PROJECT DIRECTORY / 项目目录</span>
+              <h3>选择一份<br /><em>视觉档案。</em></h3>
+              <div className="work-directory" aria-label="精选项目目录">
+                {featuredProjects.map((project, index) => (
+                  <button
+                    className={index === activeWorkIndex ? 'is-active' : ''}
+                    type="button"
+                    key={project.slug}
+                    data-motion-card
+                    data-gsap
+                    onClick={() => selectWork(index)}
+                    aria-current={index === activeWorkIndex ? 'true' : undefined}
+                  >
+                    <span>{project.no}</span>
+                    <small>{project.directoryCategory}</small>
+                    <strong>{project.homeTitle}</strong>
+                    <ArrowRight size={17} />
+                  </button>
+                ))}
+              </div>
+              <p className="work-directory-hint">点击目录切换项目；首次点击卡片聚焦，再次点击或选择“进入项目”查看详情。无操作时自动轮播。</p>
             </div>
             <div className="work-swap-stage" data-motion-card data-gsap>
-              <CardSwap width={620} height={470} cardDistance={46} verticalDistance={38} delay={5200} pauseOnHover>
-                {featuredProjects.map((project) => (
+              <CardSwap
+                width={620}
+                height={470}
+                cardDistance={46}
+                verticalDistance={38}
+                activeIndex={activeWorkIndex}
+                onCardClick={handleWorkCardClick}
+              >
+                {featuredProjects.map((project, index) => (
                   <Card
                     customClass={`work-swap-card ${project.tone}`}
                     key={project.slug}
-                    role="link"
+                    role="button"
                     tabIndex="0"
-                    aria-label={`查看${project.title}详情`}
-                    onClick={(event) => openProject(event, project.slug)}
+                    aria-label={`${index === activeWorkIndex ? '当前项目，' : ''}点击预览${project.title}；再次点击进入详情`}
                     onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') openProject(event, project.slug)
+                      if (event.key === 'Enter' || event.key === ' ') handleWorkCardClick(index, event)
                     }}
                   >
                     <img src={project.image} alt={`${project.title}项目展示`} data-motion-image />
@@ -950,6 +1133,16 @@ function App() {
                       <small>{project.category}</small>
                       <h3>{project.homeTitle}</h3>
                       <p>{project.en} · {project.year}</p>
+                      <button
+                        className="work-swap-card__enter"
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          openProject(event, project.slug)
+                        }}
+                      >
+                        进入项目 / ENTER <ArrowUpRight size={15} />
+                      </button>
                     </div>
                   </Card>
                 ))}
@@ -988,7 +1181,7 @@ function App() {
           <div className="toolkit-grid">
             {designTools.map((tool) => (
               <div className="tool-item" key={tool.name}>
-                <span>{tool.short}</span>
+                <span className="tool-logo"><SoftwareLogo type={tool.short} /></span>
                 <strong>{tool.name}</strong>
                 <small>{tool.use}</small>
               </div>

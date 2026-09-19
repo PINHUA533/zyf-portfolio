@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import Grainient from './Grainient'
+import Aurora from './Aurora'
 import './ScrollExpand.css'
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
@@ -89,29 +89,19 @@ export default function ScrollExpand({
             <video src={src} poster={poster} autoPlay muted loop playsInline aria-label={alt} />
           ) : mediaType === 'color' ? (
             <div className="scroll-expand__color-art" role="img" aria-label={alt}>
-              <Grainient
-                color1="#68ffe4"
-                color2="#7768ff"
-                color3="#04050a"
-                timeSpeed={0.16}
-                colorBalance={-0.12}
-                warpStrength={0.82}
-                warpFrequency={4.4}
-                warpSpeed={1.05}
-                warpAmplitude={62}
-                blendAngle={-12}
-                blendSoftness={0.14}
-                rotationAmount={380}
-                noiseScale={1.8}
-                grainAmount={0.14}
-                grainScale={2.4}
-                contrast={1.58}
-                saturation={1.08}
-                zoom={0.86}
+              <Aurora
+                colorStops={['#68ffe4', '#806bff', '#ff86df']}
+                blend={0.42}
+                amplitude={1.08}
+                speed={0.72}
               />
-              <div className="scroll-expand__opening-title">
+              <span className="scroll-expand__aurora-shade" aria-hidden="true" />
+              <div
+                className="scroll-expand__opening-title"
+                style={{ opacity: 1 - clamp((progress - 0.3) * 2.4), transform: `translate(-50%, -50%) scale(${1 + eased * 0.16})` }}
+              >
                 <span>ZHU YI FEI</span>
-                <strong>PORTFOLIO</strong>
+                <strong><b>PORT</b><i>FOLIO</i></strong>
                 <em>2026 · VISUAL DESIGN</em>
               </div>
             </div>

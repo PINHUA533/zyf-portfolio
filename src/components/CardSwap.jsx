@@ -1,12 +1,4 @@
-import {
-  Children,
-  cloneElement,
-  forwardRef,
-  isValidElement,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
+import { Children, cloneElement, forwardRef, isValidElement, useLayoutEffect, useMemo, useRef } from 'react'
 import { gsap } from 'gsap'
 import './CardSwap.css'
 
@@ -14,11 +6,11 @@ export const Card = forwardRef(function Card({ customClass = '', ...rest }, ref)
   return <article ref={ref} {...rest} className={`swap-card ${customClass}`.trim()} />
 })
 
-const slotFor = (index, total, distanceX, distanceY) => ({
-  x: index * distanceX,
-  y: -index * distanceY,
-  z: -index * distanceX * 1.35,
-  zIndex: total - index,
+const slotFor = (slot, total, distanceX, distanceY) => ({
+  x: slot * distanceX,
+  y: -slot * distanceY,
+  z: -slot * distanceX * 1.3,
+  zIndex: total - slot,
 })
 
 export default function CardSwap({
@@ -26,96 +18,46 @@ export default function CardSwap({
   height = 440,
   cardDistance = 54,
   verticalDistance = 48,
-  delay = 4800,
-  pauseOnHover = true,
+  activeIndex = 0,
   onCardClick,
   skewAmount = 5,
   children,
 }) {
-  const containerRef = useRef(null)
   const cardsRef = useRef([])
-  const orderRef = useRef([])
-  const timerRef = useRef(null)
-  const busyRef = useRef(false)
   const cards = useMemo(() => Children.toArray(children), [children])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const elements = cardsRef.current.filter(Boolean)
     const total = elements.length
     if (!total) return undefined
+    const order = Array.from({ length: total }, (_, offset) => (activeIndex + offset) % total)
 
-    orderRef.current = Array.from({ length: total }, (_, index) => index)
-    elements.forEach((element, index) => {
-      gsap.set(element, {
-        ...slotFor(index, total, cardDistance, verticalDistance),
-        rotateZ: index % 2 ? skewAmount * 0.28 : -skewAmount * 0.2,
-        transformOrigin: '50% 100%',
+    order.forEach((cardIndex, slot) => {
+      gsap.to(elements[cardIndex], {
+        ...slotFor(slot, total, cardDistance, verticalDistance),
+        rotateZ: slot === 0 ? 0 : slot % 2 ? skewAmount * 0.22 : -skewAmount * 0.16,
+        scale: slot === 0 ? 1 : 1 - Math.min(slot * 0.012, 0.045),
+        duration: 1.05,
+        ease: 'power4.inOut',
+        overwrite: true,
       })
     })
 
-    const swap = () => {
-      if (busyRef.current || total < 2) return
-      busyRef.current = true
-      const order = orderRef.current
-      const frontIndex = order[0]
-      const front = elements[frontIndex]
-      const nextOrder = [...order.slice(1), frontIndex]
-      const timeline = gsap.timeline({
-        defaults: { ease: 'power3.inOut' },
-        onComplete: () => { busyRef.current = false },
-      })
-
-      timeline.to(front, { y: height * 0.75, x: -cardDistance * 0.55, rotateZ: -skewAmount, duration: 0.62 })
-      nextOrder.slice(0, -1).forEach((cardIndex, slotIndex) => {
-        timeline.to(elements[cardIndex], {
-          ...slotFor(slotIndex, total, cardDistance, verticalDistance),
-          rotateZ: slotIndex % 2 ? skewAmount * 0.28 : -skewAmount * 0.2,
-          duration: 0.92,
-        }, 0.16 + slotIndex * 0.055)
-      })
-      timeline.set(front, { zIndex: 0 })
-      timeline.to(front, {
-        ...slotFor(total - 1, total, cardDistance, verticalDistance),
-        rotateZ: (total - 1) % 2 ? skewAmount * 0.28 : -skewAmount * 0.2,
-        duration: 0.92,
-      }, 0.56)
-      orderRef.current = nextOrder
-    }
-
-    const start = () => {
-      window.clearInterval(timerRef.current)
-      timerRef.current = window.setInterval(swap, delay)
-    }
-    const stop = () => window.clearInterval(timerRef.current)
-    start()
-
-    const container = containerRef.current
-    if (pauseOnHover && container) {
-      container.addEventListener('mouseenter', stop)
-      container.addEventListener('mouseleave', start)
-    }
-
-    return () => {
-      stop()
-      if (pauseOnHover && container) {
-        container.removeEventListener('mouseenter', stop)
-        container.removeEventListener('mouseleave', start)
-      }
-      gsap.killTweensOf(elements)
-    }
-  }, [cards.length, cardDistance, delay, height, pauseOnHover, skewAmount, verticalDistance])
+    return () => gsap.killTweensOf(elements)
+  }, [activeIndex, cardDistance, cards.length, skewAmount, verticalDistance])
 
   return (
     <div
-      ref={containerRef}
       className="card-swap-container"
       style={{ '--swap-width': `${width}px`, '--swap-height': `${height}px` }}
     >
       {cards.map((child, index) => isValidElement(child) ? cloneElement(child, {
         ref: (node) => { cardsRef.current[index] = node },
+        customClass: `${child.props.customClass ?? ''} ${index === activeIndex ? 'is-active' : ''}`.trim(),
+        'aria-current': index === activeIndex ? 'true' : undefined,
         onClick: (event) => {
           child.props.onClick?.(event)
-          onCardClick?.(index)
+          onCardClick?.(index, event)
         },
       }) : child)}
     </div>

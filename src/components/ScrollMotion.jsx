@@ -10,7 +10,7 @@ export default function ScrollMotion({ routeKey = 'home' }) {
     if (reduceMotion) return undefined
 
     const context = gsap.context(() => {
-      document.querySelectorAll('[data-motion-section]').forEach((section) => {
+      document.querySelectorAll('[data-motion-section]').forEach((section, sectionIndex) => {
         const title = section.querySelectorAll('[data-motion-title]')
         const cards = section.querySelectorAll('[data-motion-card]')
         const images = section.querySelectorAll('[data-motion-image]')
@@ -24,23 +24,25 @@ export default function ScrollMotion({ routeKey = 'home' }) {
 
         if (title.length) {
           timeline.from(title, {
-            yPercent: 115,
-            rotateX: 12,
+            xPercent: sectionIndex % 2 ? 18 : -18,
+            yPercent: 135,
+            rotateX: 18,
+            rotateZ: sectionIndex % 2 ? 1.2 : -1.2,
             opacity: 0,
-            duration: 1.45,
+            duration: 1.7,
             ease: 'power4.out',
-            stagger: 0.08,
+            stagger: 0.12,
           })
         }
         if (cards.length) {
           timeline.from(cards, {
-            y: 110,
-            scale: 0.96,
+            y: 128,
+            scale: 0.94,
             opacity: 0,
-            duration: 1.15,
-            stagger: 0.14,
+            duration: 1.28,
+            stagger: 0.16,
             ease: 'power4.out',
-          }, title.length ? '-=.72' : 0)
+          }, title.length ? '-=.58' : 0)
         }
         if (images.length) {
           timeline.fromTo(images, {
@@ -49,8 +51,8 @@ export default function ScrollMotion({ routeKey = 'home' }) {
           }, {
             clipPath: 'inset(0 0 0% 0)',
             scale: 1,
-            duration: 1.45,
-            stagger: 0.12,
+            duration: 1.65,
+            stagger: 0.16,
             ease: 'power3.inOut',
           }, '-=.85')
 
