@@ -15,7 +15,9 @@
     "react": "latest",
     "react-dom": "latest",
     "lucide-react": "latest",
-    "matter-js": "^0.20.0"
+    "matter-js": "^0.20.0",
+    "gsap": "^3.13.0",
+    "ogl": "^1.0.11"
   },
   "devDependencies": {}
 }

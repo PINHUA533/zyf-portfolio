@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Grainient from './Grainient'
 import './ScrollExpand.css'
 
 const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value))
@@ -88,17 +89,36 @@ export default function ScrollExpand({
             <video src={src} poster={poster} autoPlay muted loop playsInline aria-label={alt} />
           ) : mediaType === 'color' ? (
             <div className="scroll-expand__color-art" role="img" aria-label={alt}>
-              <span>VISUAL</span>
-              <strong>DREAM / SYSTEM / STORY</strong>
-              <em>PORTFOLIO</em>
+              <Grainient
+                color1="#68ffe4"
+                color2="#7768ff"
+                color3="#04050a"
+                timeSpeed={0.16}
+                colorBalance={-0.12}
+                warpStrength={0.82}
+                warpFrequency={4.4}
+                warpSpeed={1.05}
+                warpAmplitude={62}
+                blendAngle={-12}
+                blendSoftness={0.14}
+                rotationAmount={380}
+                noiseScale={1.8}
+                grainAmount={0.14}
+                grainScale={2.4}
+                contrast={1.58}
+                saturation={1.08}
+                zoom={0.86}
+              />
+              <div className="scroll-expand__opening-title">
+                <span>ZHU YI FEI</span>
+                <strong>PORTFOLIO</strong>
+                <em>2026 · VISUAL DESIGN</em>
+              </div>
             </div>
           ) : (
             <img src={src} alt={alt} />
           )}
           <span className="scroll-expand__scrim" style={{ opacity: overlayScrim + contentProgress * 0.18 }} />
-          <span className="scroll-expand__pixels" aria-hidden="true" />
-          <span className="scroll-expand__sparkle scroll-expand__sparkle--one" aria-hidden="true">✦</span>
-          <span className="scroll-expand__sparkle scroll-expand__sparkle--two" aria-hidden="true">✧</span>
           <span className="scroll-expand__title" style={{ opacity: 1 - clamp(progress * 2.4) }}>{title}</span>
           <span className="scroll-expand__hint" style={{ opacity: 1 - clamp(progress * 2.8) }}>{scrollHint}</span>
         </div>

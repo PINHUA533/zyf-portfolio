@@ -16,6 +16,9 @@ import {
 } from 'lucide-react'
 import FallingText from './components/FallingText'
 import ScrollExpand from './components/ScrollExpand'
+import CardSwap, { Card } from './components/CardSwap'
+import ScrollMotion from './components/ScrollMotion'
+import SplashCursor from './components/SplashCursor'
 
 const projects = [
   {
@@ -290,19 +293,19 @@ function ReadingProgress({ progress, belowHeader = false, scrolled = false }) {
 
 function PersonalityExperiment() {
   return (
-    <section className="personality-section" id="personality" aria-labelledby="personality-title">
+    <section className="personality-section" id="personality" aria-labelledby="personality-title" data-motion-section>
       <div className="shell">
-        <div className="personality-bar" data-reveal>
+        <div className="personality-bar" data-motion-title data-gsap>
           <span>04 / PERSONAL LABELS</span>
           <span>INTERESTS · PERSONALITY</span>
         </div>
-        <div className="personality-board" data-reveal="media">
+        <div className="personality-board" data-motion-card data-gsap>
           <div className="personality-intro">
             <span>PERSONAL FILE / ZYF</span>
             <h2 id="personality-title">MY<br /><em>VIBE</em></h2>
             <p>一些兴趣，一点性格，<br />拼成真实的我。</p>
           </div>
-          <FallingText items={personalityWords} trigger="scroll" gravity={0.68} />
+          <FallingText items={personalityWords} trigger="scroll" gravity={0.82} />
         </div>
       </div>
     </section>
@@ -699,9 +702,9 @@ function ProjectDetail({ project, onBack, onOpenProject }) {
 function App() {
   const [scrolled, setScrolled] = useState(false)
   const [scrollProgress, setScrollProgress] = useState(0)
-  const [activeProjectSlug, setActiveProjectSlug] = useState(null)
+  const [activeProjectSlug, setActiveProjectSlug] = useState(getProjectSlug())
   const [transitioning, setTransitioning] = useState(false)
-  const [transitionColor, setTransitionColor] = useState('#aef5dc')
+  const [transitionColor, setTransitionColor] = useState('#68ffe4')
   const [copyNotice, setCopyNotice] = useState('')
 
   useEffect(() => {
@@ -722,7 +725,7 @@ function App() {
       }),
       { threshold: 0.08, rootMargin: '0px 0px -6% 0px' },
     )
-    document.querySelectorAll('[data-reveal]').forEach((node) => observer.observe(node))
+    document.querySelectorAll('[data-reveal]:not([data-gsap])').forEach((node) => observer.observe(node))
     return () => observer.disconnect()
   }, [activeProjectSlug])
 
@@ -745,8 +748,7 @@ function App() {
   const openProject = (event, slug) => {
     event.preventDefault()
     if (transitioning) return
-    const destination = featuredProjects.find((project) => project.slug === slug)
-    setTransitionColor(destination?.transitionColor ?? '#c0dbae')
+    setTransitionColor('#68ffe4')
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
@@ -762,7 +764,7 @@ function App() {
   const closeProject = (event, target = 'work') => {
     event.preventDefault()
     if (transitioning) return
-    setTransitionColor('#aef5dc')
+    setTransitionColor('#68ffe4')
     setTransitioning(true)
     window.setTimeout(() => {
       const url = new URL(window.location.href)
@@ -801,6 +803,7 @@ function App() {
   if (activeProject) {
     return (
       <>
+        <SplashCursor COLOR="#68ffe4" SECONDARY_COLOR="#806bff" />
         <ReadingProgress progress={scrollProgress} />
         <ProjectDetail project={activeProject} onBack={closeProject} onOpenProject={openProject} />
         <PageWipe active={transitioning} color={transitionColor} />
@@ -810,6 +813,8 @@ function App() {
 
   return (
     <main>
+      <SplashCursor COLOR="#68ffe4" SECONDARY_COLOR="#806bff" />
+      <ScrollMotion routeKey="home" />
       <ReadingProgress progress={scrollProgress} belowHeader scrolled={scrolled} />
       <PageWipe active={transitioning} color={transitionColor} />
       <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
@@ -829,12 +834,12 @@ function App() {
       <section className="scroll-opening" id="top" aria-label="滚动开场">
         <ScrollExpand
           mediaType="color"
-          alt="灰绿色复古波点与字体构成的梦核开场画面"
+          alt="黑色、青色与蓝紫颗粒流动构成的梦核开场画面"
           title="ZYF / 2026"
           scrollHint="向下滚动 · SCROLL TO OPEN"
-          startWidth={34}
-          startHeight={56}
-          startRadius={180}
+          startWidth={70}
+          startHeight={62}
+          startRadius={34}
           endRadius={0}
           mediaZoom={1.1}
           scrollDistance={1.12}
@@ -843,13 +848,8 @@ function App() {
           overlayScrim={0.1}
         >
           <div className="scroll-opening__content shell">
-            <div className="scroll-opening__meta">
-              <span>VISUAL DESIGN / 2026</span>
-              <span>UI · UX · BRAND · IP</span>
-            </div>
             <div className="scroll-opening__title">
               <span>PORT</span><em>FOLIO</em>
-              <small>DREAM / SYSTEM / STORY</small>
             </div>
             <div className="scroll-opening__footer">
               <p>ZHU YI FEI</p>
@@ -859,14 +859,14 @@ function App() {
         </ScrollExpand>
       </section>
 
-      <section className="about section shell" id="about">
-        <div className="section-label" data-reveal>
+      <section className="about section shell" id="about" data-motion-section>
+        <div className="section-label" data-motion-title data-gsap>
           <span>01</span> ABOUT ME <MoveRight size={18} />
         </div>
         <div className="about-layout">
-          <div className="portrait-wrap" data-reveal>
+          <div className="portrait-wrap" data-motion-card data-gsap>
             <div className="portrait-card">
-              <img className="portrait-main" src="/assets/portrait-zhu-yifei.jpg" alt="视觉设计师朱一飞的个人照片" />
+              <img className="portrait-main" src="/assets/portrait-zhu-yifei.jpg" alt="视觉设计师朱一飞的个人照片" data-motion-image />
               <span className="portrait-note">HELLO, THIS IS<br />ZHU YIFEI :)</span>
             </div>
             <DoodleStar className="portrait-star" />
@@ -876,7 +876,7 @@ function App() {
             </h2>
           </div>
 
-          <div className="about-copy" data-reveal>
+          <div className="about-copy" data-motion-card data-gsap>
             <p className="eyebrow">2027 GRADUATE / VISUAL DESIGNER / IP CREATOR</p>
             <h2 className="about-title">
               <span className="about-hi">Hi<i aria-label="，" /></span>
@@ -902,83 +902,74 @@ function App() {
           </div>
         </div>
 
-        <div className="stats" data-reveal>
+        <div className="stats" data-motion-card data-gsap>
           <div><strong>05+</strong><span>完整项目<br />SELECTED PROJECTS</span></div>
           <div><strong>A</strong><span>核心能力<br />CORE SKILLS</span></div>
           <div><strong>∞</strong><span>持续探索<br />KEEP CREATING</span></div>
         </div>
       </section>
 
-      <section className="work section" id="work">
+      <section className="work section" id="work" data-motion-section>
         <div className="shell">
-          <div className="section-label light" data-reveal>
+          <div className="section-label light" data-motion-title data-gsap>
             <span>02</span> SELECTED WORKS <MoveRight size={18} />
           </div>
-          <div className="work-heading" data-reveal>
+          <div className="work-heading" data-motion-title data-gsap>
             <h2>
               <span className="work-title-line"><b>Selected</b><i>精选</i></span>
               <span className="work-title-line"><em>Works</em><i>作品</i></span>
             </h2>
             <p>05 PROJECTS<br />2025—2026</p>
           </div>
-          <div className="project-list">
-            {featuredProjects.map((project) => (
-              <article className={`project-card ${project.tone}`} key={project.title}>
-                <a
-                  className="project-card-link"
-                  href={`?project=${project.slug}`}
-                  onClick={(event) => openProject(event, project.slug)}
-                  aria-label={`查看${project.title}详情`}
-                >
-                  <div
-                    className={`project-visual ${project.homeVideoBackdrop ? 'has-video-backdrop' : ''}`}
-                    data-reveal="media"
+          <div className="work-swap-layout">
+            <div className="work-swap-copy" data-motion-card data-gsap>
+              <span>CLICK TO OPEN / 自动轮播</span>
+              <h3>五个项目，<br />一组流动的<br /><em>视觉档案。</em></h3>
+              <p>卡片会缓慢自动切换；悬停暂停，点击当前卡片进入完整项目。</p>
+              <div className="work-swap-counter">01 — 05 <ArrowUpRight size={18} /></div>
+            </div>
+            <div className="work-swap-stage" data-motion-card data-gsap>
+              <CardSwap width={620} height={470} cardDistance={46} verticalDistance={38} delay={5200} pauseOnHover>
+                {featuredProjects.map((project) => (
+                  <Card
+                    customClass={`work-swap-card ${project.tone}`}
+                    key={project.slug}
+                    role="link"
+                    tabIndex="0"
+                    aria-label={`查看${project.title}详情`}
+                    onClick={(event) => openProject(event, project.slug)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') openProject(event, project.slug)
+                    }}
                   >
-                    <div className="retro-window-bar" aria-hidden="true">
-                      <span>PROJECT_{project.no}.HTML</span><span>— □ ×</span>
-                    </div>
-                    {project.homeVideoBackdrop && (
-                      <video
-                        className="project-video-backdrop"
-                        src={project.video}
-                        poster={project.detailImage}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        preload="metadata"
-                        aria-hidden="true"
-                      />
-                    )}
-                    <img src={project.image} alt={`${project.title}项目展示`} />
-                    <span className="project-index">/{project.no}</span>
-                    <span className="project-open"><ArrowUpRight size={24} /></span>
-                    <div className="project-info" data-reveal="copy">
+                    <img src={project.image} alt={`${project.title}项目展示`} data-motion-image />
+                    <div className="work-swap-card__veil" />
+                    <span className="work-swap-card__index">PROJECT / {project.no}</span>
+                    <ArrowUpRight className="work-swap-card__arrow" size={28} />
+                    <div className="work-swap-card__copy">
+                      <small>{project.category}</small>
                       <h3>{project.homeTitle}</h3>
-                      <div className="project-card-footer">
-                        <span>{project.category}<small>{project.categoryZh}</small></span>
-                        <span>{project.year}</span>
-                      </div>
+                      <p>{project.en} · {project.year}</p>
                     </div>
-                  </div>
-                </a>
-              </article>
-            ))}
+                  </Card>
+                ))}
+              </CardSwap>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="strengths section shell" id="strengths">
-        <div className="section-label" data-reveal>
+      <section className="strengths section shell" id="strengths" data-motion-section>
+        <div className="section-label" data-motion-title data-gsap>
           <span>03</span> WHAT I DO <MoveRight size={18} />
         </div>
-        <div className="strengths-heading" data-reveal>
+        <div className="strengths-heading" data-motion-title data-gsap>
           <h2>我擅长把<br /><em>想法</em>变成视觉。</h2>
           <Sparkles size={54} strokeWidth={1} />
         </div>
         <div className="strength-grid">
           {strengths.map(({ icon: Icon, ...item }) => (
-            <article className="strength-card" key={item.title} data-reveal>
+            <article className="strength-card" key={item.title} data-motion-card data-gsap>
               <div className="strength-top">
                 <span>{item.index}</span>
                 <Icon size={34} strokeWidth={1.4} />
@@ -989,7 +980,7 @@ function App() {
             </article>
           ))}
         </div>
-        <div className="toolkit" data-reveal>
+        <div className="toolkit" data-motion-card data-gsap>
           <div className="toolkit-heading">
             <span>DESIGN TOOLKIT</span>
             <p>平面、数字产品、动态视觉与三维表达</p>
@@ -1009,15 +1000,15 @@ function App() {
 
       <PersonalityExperiment />
 
-      <section className="contact" id="contact">
+      <section className="contact" id="contact" data-motion-section>
         <div className="contact-doodles" aria-hidden="true">
           <Asterisk className="contact-asterisk" />
           <span>LET'S MAKE<br />SOMETHING<br />MEMORABLE</span>
         </div>
         <div className="shell contact-inner">
-          <p className="contact-kicker" data-reveal>HAVE A PROJECT IN MIND?</p>
-          <h2 data-reveal>一起做点<br /><em>有意思</em>的事。</h2>
-          <div className="contact-links" data-reveal>
+          <p className="contact-kicker" data-motion-title data-gsap>HAVE A PROJECT IN MIND?</p>
+          <h2 data-motion-title data-gsap>一起做点<br /><em>有意思</em>的事。</h2>
+          <div className="contact-links" data-motion-card data-gsap>
             <button className="mail-link" type="button" onClick={() => copyContact('1131440698@qq.com')}>
               <span><Mail size={24} /> 1131440698@qq.com</span>
               <ArrowUpRight size={44} strokeWidth={1.2} />

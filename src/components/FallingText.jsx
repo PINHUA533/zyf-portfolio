@@ -54,7 +54,7 @@ export default function FallingText({ items, trigger = 'scroll', gravity = 0.62 
     const bodies = wordRefs.current.filter(Boolean).map((node, index) => {
       const rect = node.getBoundingClientRect()
       const x = width * (0.14 + ((index * 0.137) % 0.72))
-      const y = -50 - index * 58
+      const y = -22 - index * 34
       const body = Bodies.rectangle(x, y, rect.width, rect.height, {
         restitution: 0.58,
         friction: 0.18,
@@ -100,8 +100,8 @@ export default function FallingText({ items, trigger = 'scroll', gravity = 0.62 
       aria-label="兴趣与个性标签"
     >
       <div className="falling-text__status">
-        <span>PHYSICS TYPE CLOUD</span>
-        <span>滚动触发 / 可拖动 · SCROLL &amp; DRAG</span>
+        <span>TYPE IN MOTION</span>
+        <span>可拖动 · DRAG</span>
       </div>
       <div className="falling-text__words">
         {items.map((item, index) => (
