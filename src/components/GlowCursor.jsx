@@ -84,7 +84,15 @@ export default function GlowCursor({ color = '#68ffe4', secondaryColor = '#806bf
       style={{ '--cursor-primary': color, '--cursor-secondary': secondaryColor }}
       aria-hidden="true"
     >
-      {Array.from({ length: POINTS }, (_, index) => <i key={index} className={index % 3 === 0 ? 'is-secondary' : ''} />)}
+      {Array.from({ length: POINTS }, (_, index) => {
+        const primaryWeight = Math.round((1 - index / (POINTS - 1)) * 100)
+        return (
+          <i
+            key={index}
+            style={{ '--cursor-color': `color-mix(in srgb, ${color} ${primaryWeight}%, ${secondaryColor})` }}
+          />
+        )
+      })}
     </div>
   )
 }

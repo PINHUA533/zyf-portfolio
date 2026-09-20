@@ -53,8 +53,8 @@ export default function ScrollExpand({
         media.style.setProperty('--scroll-expand-zoom', zoom)
       }
       if (openingTitleRef.current) {
-        openingTitleRef.current.style.opacity = 1 - clamp((progress - 0.3) * 2.4)
-        openingTitleRef.current.style.transform = `translate(-50%, -50%) scale(${1 + eased * 0.16})`
+        openingTitleRef.current.style.opacity = 1 - contentProgress
+        openingTitleRef.current.style.transform = 'translate(-50%, -50%)'
       }
       if (scrimRef.current) scrimRef.current.style.opacity = overlayScrim + contentProgress * 0.18
       if (titleRef.current) titleRef.current.style.opacity = 1 - clamp(progress * 2.4)

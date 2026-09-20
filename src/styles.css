@@ -1616,6 +1616,16 @@ body::before {
 }
 .scroll-opening__footer { margin-top: auto; }
 
+.work-swap-card__index {
+  padding: 0;
+  color: #68ffe4;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 800;
+  text-shadow: 0 0 20px rgba(104,255,228,.3);
+  box-shadow: none;
+}
+
 .work-directory button {
   grid-template-columns: 34px minmax(138px, 1fr) minmax(90px, .72fr) 20px;
   gap: 14px;

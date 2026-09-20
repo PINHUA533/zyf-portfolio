@@ -12,16 +12,11 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--cursor-primary);
-  box-shadow: 0 0 10px var(--cursor-primary), 0 0 24px color-mix(in srgb, var(--cursor-primary) 72%, transparent);
+  background: var(--cursor-color, var(--cursor-primary));
+  box-shadow: 0 0 10px var(--cursor-color, var(--cursor-primary)), 0 0 24px color-mix(in srgb, var(--cursor-color, var(--cursor-primary)) 72%, transparent);
   mix-blend-mode: screen;
   opacity: 0;
   will-change: transform, opacity;
-}
-
-.glow-cursor i.is-secondary {
-  background: var(--cursor-secondary);
-  box-shadow: 0 0 10px var(--cursor-secondary), 0 0 22px color-mix(in srgb, var(--cursor-secondary) 72%, transparent);
 }
 
 @media (pointer: coarse), (prefers-reduced-motion: reduce) {

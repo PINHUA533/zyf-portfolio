@@ -58,14 +58,14 @@ const projects = [
     categoryZh: '品牌包装',
     directoryCategory: '包装设计',
     year: '2026',
-    desc: '围绕“百茗”完成品牌标志、辅助图形与礼盒包装系统，以玫红与绿色构建年轻醒目的茶礼视觉。',
+    desc: '以“龙茶合一”为核心，将长兴百叶龙的非遗基因与顾渚紫笋茶的千年文脉融入当代茶礼包装。',
     tags: ['PACKAGING', 'BRAND IDENTITY', '2026'],
     image: '/assets/baiming-home.jpg',
     detailImage: '/assets/baiming-packaging.jpg',
     tone: 'magenta',
     transitionColor: '#d26567',
-    brief: '为“百茗”建立兼具传统茶文化联想与年轻传播感的品牌包装识别。',
-    approach: '提取茶叶、山水与礼盒结构特征，以高饱和玫红和绿色形成撞色系统，并将标志、纹样与包装结构统一延展。',
+    brief: '“百”取自百叶龙，“茗”是茶的雅称。项目让非遗从展柜走向日常，成为可品尝、可携带的江南记忆。',
+    approach: '以粉绿为主调，提炼龙鳞、茶杯与梯田意象，用层叠几何语言串联标志、纹样与礼盒结构。',
     deliverables: '品牌标志 / 辅助图形 / 包装结构 / 礼盒设计 / 应用展示',
     gallery: [
       { src: '/assets/baiming-showcase-board.jpg', alt: '百茗品牌包装设计全案展板', board: true },
@@ -137,13 +137,13 @@ const projects = [
     categoryZh: 'IP插画',
     directoryCategory: 'IP 插画',
     year: '2025',
-    desc: '以橘子汽水为灵感展开的角色设定与商业插画。',
+    desc: '将橘子汽水拟人化为元气开朗的原创角色，以气泡般的活力传递轻松甜美的快乐。',
     tags: ['IP DESIGN', 'ILLUSTRATION', '2025'],
     image: '/assets/juxiaopao-home.jpg',
     tone: 'orange',
     transitionColor: '#e6c56a',
-    brief: '从橘子汽水的清爽、活力与气泡感出发，塑造具有亲和力的原创角色。',
-    approach: '以橙色、紫色和亮绿色建立高识别配色，并通过夸张动作与场景插画强化角色性格。',
+    brief: '橘小泡诞生于阳光果园的汽水工坊，是一罐拥有鲜活灵魂的橘子汽水；活泼、好奇，偶尔有点冒失。',
+    approach: '以双丸子头、橙片、橙瓣与汽水泡泡建立核心识别，并通过夸张动作和场景插画强化角色性格。',
     deliverables: '角色设定 / 主视觉插画 / 动作延展 / IP应用',
     gallery: [
       { src: '/assets/juxiaopao-showcase-board.jpg', alt: '橘小泡IP插画角色设定完整展板', board: true },
@@ -706,7 +706,6 @@ function ResumeView({ onBack }) {
       <section className="resume-view__hero shell">
         <span>RÉSUMÉ / 个人简历</span>
         <h1>关于经历，<br /><em>一页看完。</em></h1>
-        <p>下方使用高清图片展示，手机和桌面浏览器都可以直接查看。</p>
       </section>
       <figure className="resume-view__sheet shell">
         <img src="/assets/zhu-yifei-resume.jpg" alt="朱一飞个人简历" loading="lazy" decoding="async" />
