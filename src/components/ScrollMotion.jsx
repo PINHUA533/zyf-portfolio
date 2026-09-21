@@ -34,6 +34,8 @@ export default function ScrollMotion({ routeKey = 'home' }) {
             duration: 1.7,
             ease: 'power4.out',
             stagger: 0.12,
+            willChange: 'transform,opacity',
+            clearProps: 'transform,opacity,willChange',
           })
         }
         if (cards.length) {
@@ -44,19 +46,28 @@ export default function ScrollMotion({ routeKey = 'home' }) {
             duration: 1.12,
             stagger: 0.13,
             ease: 'power4.out',
-            clearProps: 'transform,opacity',
+            willChange: 'transform,opacity',
+            clearProps: 'transform,opacity,willChange',
           }, title.length ? '-=.58' : 0)
         }
         if (images.length) {
           timeline.fromTo(images, {
             clipPath: 'inset(0 0 100% 0)',
             scale: 1.09,
+            willChange: 'transform,clip-path',
           }, {
             clipPath: 'inset(0 0 0% 0)',
             scale: 1,
             duration: 1.65,
             stagger: 0.16,
             ease: 'power3.inOut',
+            onComplete: () => {
+              images.forEach((image) => {
+                image.style.clipPath = ''
+                image.style.willChange = allowParallax ? 'transform' : ''
+                if (!allowParallax) image.style.transform = ''
+              })
+            },
           }, '-=.85')
 
           if (allowParallax) {

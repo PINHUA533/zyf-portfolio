@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap');
-
 :root {
   --ink: #303633;
   --paper: #eef3f2;
@@ -1223,9 +1221,7 @@ body::before {
 .mail-link:hover { color: #05060a; background: #68ffe4; }
 .contact-footer { border-color: rgba(104,255,228,.18); }
 
-[data-motion-title] { transform-origin: 50% 100%; will-change: transform, opacity; }
-[data-motion-card] { will-change: transform, opacity; }
-[data-motion-image] { will-change: transform, clip-path; }
+[data-motion-title] { transform-origin: 50% 100%; }
 
 @media (max-width: 980px) {
   .work-swap-layout { grid-template-columns: 1fr; gap: 40px; }
@@ -1345,24 +1341,6 @@ body::before {
 .work-swap-card:not(.is-active) { filter: saturate(.58) brightness(.72); }
 .work-swap-card.is-active { box-shadow: 0 36px 100px rgba(0,0,0,.68), 0 0 64px rgba(104,255,228,.16); }
 .work-swap-card__copy { pointer-events: none; }
-.work-swap-card__enter {
-  width: max-content;
-  margin-top: 17px;
-  padding: 9px 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  color: #05060a;
-  border: 0;
-  background: #68ffe4;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: .13em;
-  pointer-events: auto;
-  cursor: pointer;
-  transition: gap .25s ease, background .25s ease;
-}
-.work-swap-card__enter:hover { gap: 15px; background: #ff86df; }
 
 .strength-grid,
 .toolkit-grid {
@@ -1407,7 +1385,6 @@ body::before {
   .work-directory { grid-template-columns: 1fr; }
   .work-directory button { padding-block: 12px; }
   .work-swap-stage { min-height: 500px; }
-  .work-swap-card__enter { font-size: 8px; }
   .strength-grid,
   .toolkit-grid { gap: 8px; }
   .strength-card { min-height: 300px; }
@@ -1767,11 +1744,69 @@ body::before {
 .sleepy-case__journey,
 .sleepy-case__prototype { content-visibility: auto; contain-intrinsic-size: auto 900px; }
 
+/* One centered ambient field runs through the home page so the cyan, violet
+   and magenta light no longer break differently at the left and right edges. */
+.home-page {
+  background:
+    radial-gradient(ellipse 92% 15% at 50% 27%, rgba(104,255,228,.09), transparent 72%),
+    radial-gradient(ellipse 94% 17% at 50% 52%, rgba(128,107,255,.09), transparent 74%),
+    radial-gradient(ellipse 92% 16% at 50% 76%, rgba(255,134,223,.07), transparent 75%),
+    #05060a;
+}
+
+.home-page .about,
+.home-page .work,
+.home-page .strengths,
+.home-page .personality-section,
+.home-page .contact { background: transparent; }
+
+/* Project navigation stays available while the case study scrolls. */
+.project-detail {
+  overflow: visible;
+  overflow-x: clip;
+}
+
+.project-detail .detail-header,
+.resume-view .detail-header {
+  position: sticky;
+  z-index: 35;
+  top: 14px;
+  height: 64px;
+  margin-top: 14px;
+  padding-inline: 22px;
+  border: 1px solid rgba(104,255,228,.2);
+  border-radius: 16px;
+  background: rgba(5,10,10,.84);
+  box-shadow: 0 18px 52px rgba(0,0,0,.32), inset 0 0 0 1px rgba(255,255,255,.025);
+  backdrop-filter: blur(18px) saturate(1.2);
+}
+
+.project-detail:not(.sleepy-case) .detail-header {
+  background: color-mix(in srgb, var(--detail-bg) 86%, transparent);
+}
+
+.project-detail.sleepy-case .detail-header {
+  background: rgba(6,21,11,.88);
+}
+
+.resume-view .detail-header {
+  border-color: rgba(104,255,228,.2);
+  background: rgba(5,6,10,.86);
+}
+
 @media (max-width: 1100px) {
   .strength-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 720px) {
+  .project-detail .detail-header,
+  .resume-view .detail-header {
+    top: 8px;
+    height: 58px;
+    margin-top: 8px;
+    padding-inline: 16px;
+    border-radius: 12px;
+  }
   .scroll-opening__title { width: 112vw; }
   .scroll-opening__title > strong { font-size: clamp(66px, 19vw, 108px); }
   .scroll-opening__title > .opening-meta.is-top { font-size: 8px; }

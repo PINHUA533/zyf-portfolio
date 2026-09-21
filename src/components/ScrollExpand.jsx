@@ -33,6 +33,8 @@ export default function ScrollExpand({
   const hintRef = useRef(null)
   const targetRef = useRef(0)
   const currentRef = useRef(0)
+  const rootTopRef = useRef(0)
+  const travelRef = useRef(1)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -78,12 +80,16 @@ export default function ScrollExpand({
     }
 
     const updateTarget = () => {
+      targetRef.current = clamp((window.scrollY - rootTopRef.current) / travelRef.current)
+      requestTick()
+    }
+
+    const measure = () => {
       const root = rootRef.current
       if (!root) return
-      const rect = root.getBoundingClientRect()
-      const travel = Math.max(1, window.innerHeight * scrollDistance)
-      targetRef.current = clamp(-rect.top / travel)
-      requestTick()
+      rootTopRef.current = root.offsetTop
+      travelRef.current = Math.max(1, window.innerHeight * scrollDistance)
+      updateTarget()
     }
 
     if (!enabled || mediaQuery.matches) {
@@ -94,13 +100,13 @@ export default function ScrollExpand({
     }
 
     renderProgress(currentRef.current)
-    updateTarget()
+    measure()
     window.addEventListener('scroll', updateTarget, { passive: true })
-    window.addEventListener('resize', updateTarget)
+    window.addEventListener('resize', measure)
     return () => {
       if (frame) window.cancelAnimationFrame(frame)
       window.removeEventListener('scroll', updateTarget)
-      window.removeEventListener('resize', updateTarget)
+      window.removeEventListener('resize', measure)
     }
   }, [enabled, endRadius, holdDistance, mediaZoom, overlayScrim, scrollDistance, smoothing, startHeight, startRadius, startWidth])
 

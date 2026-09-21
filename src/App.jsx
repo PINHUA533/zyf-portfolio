@@ -5,21 +5,17 @@ import {
   ArrowRight,
   ArrowUpRight,
   Asterisk,
-  Brush,
-  CircleDot,
-  Code2,
   Mail,
   MoveRight,
-  Palette,
   Phone,
   Sparkles,
 } from 'lucide-react'
-import FallingText from './components/FallingText'
 import ScrollExpand from './components/ScrollExpand'
 import CardSwap, { Card } from './components/CardSwap'
 
 const ScrollMotion = lazy(() => import('./components/ScrollMotion'))
 const GlowCursor = lazy(() => import('./components/GlowCursor'))
+const FallingText = lazy(() => import('./components/FallingText'))
 
 const projects = [
   {
@@ -156,9 +152,9 @@ const projects = [
 const featuredProjects = [
   projects[0],
   projects[1],
-  projects[4],
   projects[3],
   projects[2],
+  projects[4],
 ].map((project, index) => ({
   ...project,
   no: String(index + 1).padStart(2, '0'),
@@ -240,28 +236,24 @@ const sleepyPalette = [
 
 const strengths = [
   {
-    icon: Palette,
     index: '01',
     title: '视觉系统',
     text: '从色彩、字体到版式秩序，建立完整且有识别度的视觉语言。',
     meta: 'VISUAL IDENTITY',
   },
   {
-    icon: CircleDot,
     index: '02',
     title: 'UI / UX',
     text: '关注界面的审美与使用感受，让复杂信息拥有清晰、自然的路径。',
     meta: 'DIGITAL EXPERIENCE',
   },
   {
-    icon: Brush,
     index: '03',
     title: '插画与 IP',
     text: '用角色、情绪和故事连接品牌，创造更鲜活、更长久的内容资产。',
     meta: 'IP & ILLUSTRATION',
   },
   {
-    icon: Code2,
     index: '04',
     title: '设计落地',
     text: '理解数字媒介与开发边界，让概念真正转化为可用的产品体验。',
@@ -325,10 +317,13 @@ function SoftwareLogo({ type }) {
     PS: ['#001e36', '#31a8ff'], AI: ['#330000', '#ff9a00'], ID: ['#49021f', '#ff3366'],
     AE: ['#00005b', '#9999ff'], PR: ['#00005b', '#9999ff'],
   }[type] ?? ['#11141b', '#f5f8f7']
+  const adobeLabel = {
+    PS: 'Ps', AI: 'Ai', ID: 'Id', AE: 'Ae', PR: 'Pr',
+  }[type] ?? type
   return (
     <svg viewBox="0 0 36 36" aria-hidden="true">
       <rect width="36" height="36" rx="7" fill={adobeTone[0]} />
-      <text x="18" y="23" fill={adobeTone[1]} fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" textAnchor="middle">{type}</text>
+      <text x="18" y="23" fill={adobeTone[1]} fontFamily="Arial, sans-serif" fontSize="13" fontWeight="700" textAnchor="middle">{adobeLabel}</text>
     </svg>
   )
 }
@@ -376,17 +371,58 @@ function ReadingProgress({ belowHeader = false, scrolled = false }) {
 }
 
 function AmbientEffects({ motion = false }) {
+  const [cursorEnabled, setCursorEnabled] = useState(false)
+  const [motionEnabled, setMotionEnabled] = useState(false)
+
+  useEffect(() => {
+    const query = window.matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)')
+    const sync = () => setCursorEnabled(query.matches)
+    sync()
+    query.addEventListener?.('change', sync)
+    return () => query.removeEventListener?.('change', sync)
+  }, [])
+
+  useEffect(() => {
+    if (!motion) return undefined
+    const enableMotion = () => setMotionEnabled(true)
+    window.addEventListener('scroll', enableMotion, { passive: true, once: true })
+    const idleId = window.requestIdleCallback?.(enableMotion, { timeout: 2400 })
+    return () => {
+      window.removeEventListener('scroll', enableMotion)
+      if (idleId) window.cancelIdleCallback?.(idleId)
+    }
+  }, [motion])
+
   return (
     <Suspense fallback={null}>
-      <GlowCursor color="#68ffe4" secondaryColor="#806bff" />
-      {motion ? <ScrollMotion routeKey="home" /> : null}
+      {cursorEnabled ? <GlowCursor /> : null}
+      {motion && motionEnabled ? <ScrollMotion routeKey="home" /> : null}
     </Suspense>
   )
 }
 
 function PersonalityExperiment() {
+  const sectionRef = useRef(null)
+  const [textReady, setTextReady] = useState(false)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return undefined
+    if (!('IntersectionObserver' in window)) {
+      setTextReady(true)
+      return undefined
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
+      setTextReady(true)
+      observer.disconnect()
+    }, { rootMargin: '520px 0px' })
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
+
   return (
-    <section className="personality-section" id="personality" aria-labelledby="personality-title" data-motion-section>
+    <section ref={sectionRef} className="personality-section" id="personality" aria-labelledby="personality-title" data-motion-section>
       <div className="shell">
         <div className="personality-bar" data-motion-title data-gsap>
           <span>04 / PERSONAL LABELS</span>
@@ -398,7 +434,9 @@ function PersonalityExperiment() {
             <h2 id="personality-title">MY<br /><em>VIBE</em></h2>
             <p>一些兴趣，一点性格，<br />拼成真实的我。</p>
           </div>
-          <FallingText items={personalityWords} trigger="scroll" gravity={0.82} />
+          <Suspense fallback={<div className="falling-text-placeholder" aria-hidden="true" />}>
+            {textReady ? <FallingText items={personalityWords} trigger="scroll" gravity={0.82} /> : <div className="falling-text-placeholder" aria-hidden="true" />}
+          </Suspense>
         </div>
       </div>
     </section>
@@ -949,7 +987,11 @@ function App() {
     url.hash = target
     window.history.pushState({}, '', url)
     setResumeOpen(false)
-    window.requestAnimationFrame(() => document.querySelector(`#${target}`)?.scrollIntoView({ block: 'start' }))
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        document.querySelector(`#${target}`)?.scrollIntoView({ block: 'start', behavior: 'auto' })
+      })
+    })
   }
 
   const handleWorkCardClick = (index, event) => {
@@ -1006,7 +1048,7 @@ function App() {
   }
 
   return (
-    <main>
+    <main className="home-page">
       <AmbientEffects motion />
       <ReadingProgress belowHeader scrolled={scrolled} />
       <PageWipe active={transitioning} color={transitionColor} />
@@ -1149,7 +1191,7 @@ function App() {
                   </button>
                 ))}
               </div>
-              <p className="work-directory-hint">点击目录切换项目；首次点击卡片聚焦，再次点击或选择“进入项目”查看详情。无操作时自动轮播。</p>
+              <p className="work-directory-hint">点击目录切换项目；首次点击卡片聚焦，再次点击卡片直接进入详情。无操作时自动轮播。</p>
             </div>
             <div className="work-swap-stage" data-motion-card data-gsap>
               <CardSwap
@@ -1179,16 +1221,6 @@ function App() {
                       <small>{project.category}</small>
                       <h3>{project.homeTitle}</h3>
                       <p>{project.en} · {project.year}</p>
-                      <button
-                        className="work-swap-card__enter"
-                        type="button"
-                        onClick={(event) => {
-                          event.stopPropagation()
-                          openProject(event, project.slug)
-                        }}
-                      >
-                        进入项目 / ENTER <ArrowUpRight size={15} />
-                      </button>
                     </div>
                   </Card>
                 ))}
@@ -1207,11 +1239,10 @@ function App() {
           <Sparkles size={54} strokeWidth={1} />
         </div>
         <div className="strength-grid">
-          {strengths.map(({ icon: Icon, ...item }) => (
+          {strengths.map((item) => (
             <article className="strength-card" key={item.title} data-motion-card data-gsap>
               <div className="strength-top">
                 <span>{item.index}</span>
-                <Icon size={34} strokeWidth={1.4} />
               </div>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
