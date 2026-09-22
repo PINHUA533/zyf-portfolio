@@ -1,0 +1,18 @@
+All visual assets are supplied by the user and stored in the local portfolio project.
+No external factual claims or third-party assets are used.
+
+Assets:
+- public/assets/portrait-illustrated-final.png
+- public/assets/sleepy-owl-flow.jpg
+- public/assets/sleepy-owl-showcase.jpg
+- public/assets/character-views.png
+- public/assets/stickers.png
+- public/assets/orange-hero.png
+- public/assets/orange-cutout.png
+- public/assets/xiangjiaban/xiang-01.jpg ... xiang-08.jpg
+
+Communication job:
+By the end, recruiters and potential collaborators should understand Zhu Yifei's visual range, system thinking, and original IP capability because the work is presented as a coherent designer-led story rather than a collection of isolated images.
+
+Visual direction:
+Dark editorial canvas, oversized typography, low-saturation acid green, warm orange, dusty violet, cream, fine rules, restrained doodle glyphs, and full-bleed project imagery.
